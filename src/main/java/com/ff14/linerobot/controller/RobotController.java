@@ -9,6 +9,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,7 +40,7 @@ public class RobotController {
 
 	@PostMapping("/messaging")
 	public ResponseEntity messagingAPI(@RequestHeader("X-Line-Signature") String X_Line_Signature,
-			@RequestBody String requestBody) throws UnsupportedEncodingException, IOException {
+			@RequestBody String requestBody) throws UnsupportedEncodingException, IOException, InterruptedException, JSONException {
 		if (checkFromLine(requestBody, X_Line_Signature)) {
 			System.out.println("驗證通過");
 			JSONObject object = new JSONObject(requestBody);
