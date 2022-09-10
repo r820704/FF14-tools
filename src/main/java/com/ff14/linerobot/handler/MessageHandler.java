@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,9 @@ public class MessageHandler {
 	@Value("${line.user.channel.token}")
 	private String LINE_TOKEN;
 
+	@Autowired
+	private WikiParser wikiParser;
+	
 	public void doAction(JSONObject event) throws InterruptedException {
 		switch (event.getJSONObject("message").getString("type")) {
 		case "text":
@@ -30,7 +35,7 @@ public class MessageHandler {
 			String houseList = null ;
 System.out.println("line收到的訊息為: " + receiveText);	
 			if(receiveText.startsWith("!房屋")) {
-				houseList = WikiParser.getHouseList();
+				houseList = wikiParser.getHouseList();
 			}
 			text(event.getString("replyToken"), houseList);
 			break;
