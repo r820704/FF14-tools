@@ -10,12 +10,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 @Configuration
 @ComponentScan(basePackages = {"com.ff14"})
 public class CrawlerConfig {
 	
 	@Autowired
+	@Lazy
 	private WebDriver driver;
 	
 	@Value("${webdriver.chrome.driver}")
@@ -31,7 +33,8 @@ System.out.println("WEBDRIVER_PATH" + WEBDRIVER_PATH);
 		
 		// 設定chromeDriver不要開啟Gui，使用無頭模式，要加上此段才能在linux環境順利產生ChromeDriver
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless","--disable-gpu");
+//        options.addArguments("--headless","--disable-gpu");  // windows環境目前能正常啟動的參數 
+        options.addArguments("--headless","--no-sandbox","--disable-dev-shm-usage"); // linux環境目前能正常啟動的參數 
         
 		return new ChromeDriver(options);
 	}
