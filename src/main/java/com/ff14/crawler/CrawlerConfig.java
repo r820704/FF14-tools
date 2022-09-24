@@ -23,7 +23,7 @@ public class CrawlerConfig {
 	@Value("${webdriver.chrome.driver}")
 	private String WEBDRIVER_PATH ;
 	
-	@Bean
+	@Bean(destroyMethod = "quit")
 	public WebDriver driver(@Value("${webdriver.chrome.driver}") String WEBDRIVER_PATH) {
 
 System.out.println("WEBDRIVER_PATH" + WEBDRIVER_PATH);
@@ -38,11 +38,5 @@ System.out.println("WEBDRIVER_PATH" + WEBDRIVER_PATH);
         
 		return new ChromeDriver(options);
 	}
-	
-	@PreDestroy
-	private void destory() {
-		System.out.println("關閉WebDriver");
-		driver.close();
-	}
-	
+		
 }
