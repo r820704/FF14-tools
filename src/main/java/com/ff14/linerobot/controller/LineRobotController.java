@@ -22,17 +22,17 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ff14.linerobot.handler.MessageHandler;
+import com.ff14.linerobot.service.LineRobotService;
 
 @RequestMapping("/robot")
 @RestController
-public class RobotController {
+public class LineRobotController {
 
 	@Value("${line.user.secret}")
 	private String LINE_SECRET;
 	
 	@Autowired
-	private MessageHandler messageHandler;
+	private LineRobotService lineRobotService;
 	@GetMapping("/test")
 	public ResponseEntity test() {
 		return new ResponseEntity("Hello J A V A!!", HttpStatus.OK);
@@ -46,7 +46,7 @@ public class RobotController {
 			JSONObject object = new JSONObject(requestBody);
 			for (int i = 0; i < object.getJSONArray("events").length(); i++) {
 				if (object.getJSONArray("events").getJSONObject(i).getString("type").equals("message")) {
-					messageHandler.doAction(object.getJSONArray("events").getJSONObject(i));
+					lineRobotService.doAction(object.getJSONArray("events").getJSONObject(i));
 				}
 			}
 			return new ResponseEntity<String>("OK", HttpStatus.OK);

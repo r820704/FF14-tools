@@ -1,6 +1,4 @@
-package com.ff14.crawler;
-
-import javax.annotation.PreDestroy;
+package com.ff14.crawler.config;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -26,7 +24,7 @@ public class CrawlerConfig {
 	@Bean(destroyMethod = "quit")
 	public WebDriver driver(@Value("${webdriver.chrome.driver}") String WEBDRIVER_PATH) {
 
-System.out.println("WEBDRIVER_PATH" + WEBDRIVER_PATH);
+System.out.println("WEBDRIVER_PATH: " + WEBDRIVER_PATH);
 		//若瀏覽器安裝位置為預設則webDriver會自動搜尋path設定的位置，也可以使用System.setProperty 來指定路徑
 		System.setProperty("webdriver.chrome.driver", WEBDRIVER_PATH);
 		//Selenium對不同瀏覽器提供了不同的webDriver

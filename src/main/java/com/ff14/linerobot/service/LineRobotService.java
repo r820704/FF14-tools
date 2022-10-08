@@ -1,4 +1,4 @@
-package com.ff14.linerobot.handler;
+package com.ff14.linerobot.service;
 
 import java.io.IOException;
 
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.ff14.crawler.WikiParser;
+import com.ff14.crawler.service.CrawlerService;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -20,13 +20,13 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 @Component
-public class MessageHandler {
+public class LineRobotService {
 	private OkHttpClient client = new OkHttpClient();
 	@Value("${line.user.channel.token}")
 	private String LINE_TOKEN;
 
 	@Autowired
-	private WikiParser wikiParser;
+	private CrawlerService crawlerService;
 	
 	public void doAction(JSONObject event) throws InterruptedException {
 		switch (event.getJSONObject("message").getString("type")) {
@@ -35,7 +35,7 @@ public class MessageHandler {
 			String houseList = null ;
 System.out.println("line收到的訊息為: " + receiveText);	
 			if(receiveText.startsWith("!房屋")) {
-				houseList = wikiParser.getHouseList();
+				houseList = crawlerService.getHouseList();
 			}
 			text(event.getString("replyToken"), houseList);
 			break;

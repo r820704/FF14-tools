@@ -1,4 +1,4 @@
-package com.ff14.crawler;
+package com.ff14.crawler.service;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
-public class WikiParser {
+public class CrawlerService {
 	
 	@Autowired
 	@Lazy
@@ -124,7 +124,7 @@ System.out.println("目前是第幾項: " + (i+1));
 		
 		System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
 		
-		WikiParser wikiParser = new WikiParser();
+		CrawlerService wikiParser = new CrawlerService();
 		wikiParser.driver = new ChromeDriver();
 		
 		wikiParser.getHouseList();
