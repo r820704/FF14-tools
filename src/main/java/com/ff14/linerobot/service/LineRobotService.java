@@ -13,17 +13,22 @@ import com.ff14.crawler.service.CrawlerService;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okio.Buffer;
+import okio.BufferedSink;
 
 @Component
 public class LineRobotService {
 	private OkHttpClient client = new OkHttpClient();
 	@Value("${line.user.channel.token}")
-	private String LINE_TOKEN;
+	private String LINE_MESSAGING_TOKEN;
+	@Value("${line.user.notify.token}")
+	private String LINE_NOTIFY_TOKEN;
 
 	@Autowired
 	private CrawlerService crawlerService;
@@ -73,7 +78,7 @@ System.out.println("line收到的訊息為: " + receiveText);
 
 	public void sendLinePlatform(JSONObject json) {
 		Request request = new Request.Builder().url("https://api.line.me/v2/bot/message/reply")
-				.header("Authorization", "Bearer {" + LINE_TOKEN + "}")
+				.header("Authorization", "Bearer {" + LINE_MESSAGING_TOKEN + "}")
 				.post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString())).build();
 		client.newCall(request).enqueue(new Callback() {
 
@@ -88,4 +93,30 @@ System.out.println("line收到的訊息為: " + receiveText);
 			}
 		});
 	}
+	
+	public void pushToLineNotify(String string) {
+
+		// FormBody自帶ContentType=application/x-www-form-urlencoded
+        FormBody formBody = new FormBody.Builder()
+        		.add("message", string)
+                .build();
+		
+		Request request = new Request.Builder().url("https://notify-api.line.me/api/notify")
+				.header("Authorization", "Bearer " + LINE_NOTIFY_TOKEN )
+				.post(formBody).build();
+
+		client.newCall(request).enqueue(new Callback() {
+
+			@Override
+			public void onResponse(Call call, Response response) throws IOException {
+				System.out.println(response.body().string());
+			}
+
+			@Override
+			public void onFailure(Call call, IOException e) {
+				System.err.println(e);
+			}
+		});
+	}
+	
 }
