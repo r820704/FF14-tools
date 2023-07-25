@@ -24,15 +24,15 @@ public class CrawlerConfig {
 	@Bean(destroyMethod = "quit")
 	public WebDriver driver(@Value("${webdriver.chrome.driver}") String WEBDRIVER_PATH) {
 
-System.out.println("WEBDRIVER_PATH: " + WEBDRIVER_PATH);
+		System.out.println("WEBDRIVER_PATH: " + WEBDRIVER_PATH);
 		//若瀏覽器安裝位置為預設則webDriver會自動搜尋path設定的位置，也可以使用System.setProperty 來指定路徑
 		System.setProperty("webdriver.chrome.driver", WEBDRIVER_PATH);
 		//Selenium對不同瀏覽器提供了不同的webDriver
 		
 		// 設定chromeDriver不要開啟Gui，使用無頭模式，要加上此段才能在linux環境順利產生ChromeDriver
         ChromeOptions options = new ChromeOptions();
-//        options.addArguments("--headless","--disable-gpu");  // windows環境目前能正常啟動的參數 
-        options.addArguments("--headless","--no-sandbox","--disable-dev-shm-usage"); // linux環境目前能正常啟動的參數 
+        options.addArguments("--headless","--disable-gpu","--remote-allow-origins=*");  // windows環境目前能正常啟動的參數 
+//        options.addArguments("--headless","--no-sandbox","--disable-dev-shm-usage","--remote-allow-origins=*"); // linux環境目前能正常啟動的參數 
         
 		return new ChromeDriver(options);
 	}

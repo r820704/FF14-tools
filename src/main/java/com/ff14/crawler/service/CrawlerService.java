@@ -13,6 +13,7 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -125,7 +126,9 @@ System.out.println("目前是第幾項: " + (i+1));
 		System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
 		
 		CrawlerService wikiParser = new CrawlerService();
-		wikiParser.driver = new ChromeDriver();
+		ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-allow-origins=*");   
+		wikiParser.driver = new ChromeDriver(options);
 		
 		wikiParser.getHouseList();
 		

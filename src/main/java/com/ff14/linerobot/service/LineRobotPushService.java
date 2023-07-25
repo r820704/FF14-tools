@@ -23,44 +23,28 @@ import okio.Buffer;
 import okio.BufferedSink;
 
 @Component
-public class LineRobotService {
+public class LineRobotPushService {
 	private OkHttpClient client = new OkHttpClient();
 	@Value("${line.user.channel.token}")
 	private String LINE_MESSAGING_TOKEN;
 	@Value("${line.user.notify.token}")
 	private String LINE_NOTIFY_TOKEN;
+	@Value("${lineuser.myid}")
+	private String LINE_MY_ID;
 
 	@Autowired
 	private CrawlerService crawlerService;
 	
-	public void doAction(JSONObject event) throws InterruptedException {
-		switch (event.getJSONObject("message").getString("type")) {
-		case "text":
-			String receiveText = event.getJSONObject("message").getString("text");
-			String houseList = null ;
-System.out.println("line收到的訊息為: " + receiveText);	
-			if(receiveText.startsWith("!房屋")) {
-				houseList = crawlerService.getHouseList();
-			}
-			text(event.getString("replyToken"), houseList);
-			break;
-//		case "sticker":
-//			sticker(event.getString("replyToken"), event.getJSONObject("message").getString("packageId"),
-//					event.getJSONObject("message").getString("stickerId"));
-//			break;
-		}
-	}
-
-	private void text(String replyToken, String text) {
+	public void text(String text) {
 		JSONObject body = new JSONObject();
 		JSONArray messages = new JSONArray();
 		JSONObject message = new JSONObject();
 		message.put("type", "text");
 		message.put("text", text);
 		messages.put(message);
-		body.put("replyToken", replyToken);
+		body.put("to", LINE_MY_ID);
 		body.put("messages", messages);
-		sendLinePlatform(body);
+		pushLinePlatform(body);
 	}
 
 	private void sticker(String replyToken, String packageId, String stickerId) {
@@ -73,13 +57,13 @@ System.out.println("line收到的訊息為: " + receiveText);
 		messages.put(message);
 		body.put("replyToken", replyToken);
 		body.put("messages", messages);
-		sendLinePlatform(body);
+		pushLinePlatform(body);
 	}
 
-	public void sendLinePlatform(JSONObject json) {
-		Request request = new Request.Builder().url("https://api.line.me/v2/bot/message/reply")
+	public void pushLinePlatform(JSONObject json) {
+		Request request = new Request.Builder().url("https://api.line.me/v2/bot/message/push")
 				.header("Authorization", "Bearer {" + LINE_MESSAGING_TOKEN + "}")
-				.post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString())).build();
+				.post(RequestBody.create(MediaType.parse("application/json"), json.toString())).build();
 		client.newCall(request).enqueue(new Callback() {
 
 			@Override
@@ -94,5 +78,29 @@ System.out.println("line收到的訊息為: " + receiveText);
 		});
 	}
 	
+	public void pushToLineNotify(String string) {
+
+		// FormBody自帶ContentType=application/x-www-form-urlencoded
+        FormBody formBody = new FormBody.Builder()
+        		.add("message", string)
+                .build();
+		
+		Request request = new Request.Builder().url("https://notify-api.line.me/api/notify")
+				.header("Authorization", "Bearer " + LINE_NOTIFY_TOKEN )
+				.post(formBody).build();
+
+		client.newCall(request).enqueue(new Callback() {
+
+			@Override
+			public void onResponse(Call call, Response response) throws IOException {
+				System.out.println(response.body().string());
+			}
+
+			@Override
+			public void onFailure(Call call, IOException e) {
+				System.err.println(e);
+			}
+		});
+	}
 	
 }

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ff14.linerobot.service.LineRobotPushService;
 import com.ff14.linerobot.service.LineRobotService;
 
 @RequestMapping("/robot")
@@ -33,6 +34,9 @@ public class LineRobotController {
 	
 	@Autowired
 	private LineRobotService lineRobotService;
+	@Autowired
+	private LineRobotPushService lineRobotPushService;
+	
 	@GetMapping("/test")
 	public ResponseEntity test() {
 		return new ResponseEntity("Hello J A V A!!", HttpStatus.OK);
@@ -54,7 +58,21 @@ public class LineRobotController {
 		System.out.println("驗證不通過");
 		return new ResponseEntity<String>("Not line platform", HttpStatus.BAD_GATEWAY);
 	}
+	
+	@GetMapping("/pushtolinenotify")
+	public ResponseEntity pushtolinenotify() {
+		lineRobotPushService.pushToLineNotify("Push to Line Notify!!!");
+		
+		return new ResponseEntity<String>("OK", HttpStatus.OK);
+	}
 
+	@GetMapping("/pushtolineplatform")
+	public ResponseEntity pushtolineplatform() {
+		lineRobotPushService.text("Push to Line Platform!!!");
+		
+		return new ResponseEntity<String>("OK", HttpStatus.OK);
+	}
+	
 	public boolean checkFromLine(String requestBody, String X_Line_Signature) {
 		SecretKeySpec key = new SecretKeySpec(LINE_SECRET.getBytes(), "HmacSHA256");
 		Mac mac;
