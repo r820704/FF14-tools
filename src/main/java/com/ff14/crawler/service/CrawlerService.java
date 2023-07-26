@@ -132,7 +132,7 @@ System.out.println("目前是第幾項: " + (i+1));
 		
 		wikiParser.getHouseList();
 		
-//		wikiParser.driver.close();
+		wikiParser.driver.close();
 
 	}
 	

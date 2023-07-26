@@ -14,10 +14,6 @@ import org.springframework.context.annotation.Lazy;
 @ComponentScan(basePackages = {"com.ff14"})
 public class CrawlerConfig {
 	
-	@Autowired
-	@Lazy
-	private WebDriver driver;
-	
 	@Value("${webdriver.chrome.driver}")
 	private String WEBDRIVER_PATH ;
 	
