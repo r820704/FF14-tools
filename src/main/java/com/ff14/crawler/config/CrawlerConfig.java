@@ -27,8 +27,8 @@ public class CrawlerConfig {
 		
 		// 設定chromeDriver不要開啟Gui，使用無頭模式，要加上此段才能在linux環境順利產生ChromeDriver
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless","--disable-gpu","--remote-allow-origins=*");  // windows環境目前能正常啟動的參數 
-//        options.addArguments("--headless","--no-sandbox","--disable-dev-shm-usage","--remote-allow-origins=*"); // linux環境目前能正常啟動的參數 
+//        options.addArguments("--headless","--disable-gpu","--remote-allow-origins=*");  // windows環境目前能正常啟動的參數 
+        options.addArguments("--headless","--no-sandbox","--disable-dev-shm-usage","--remote-allow-origins=*"); // linux環境目前能正常啟動的參數 
         
 		return new ChromeDriver(options);
 	}
