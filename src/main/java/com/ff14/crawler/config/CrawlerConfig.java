@@ -1,14 +1,15 @@
 package com.ff14.crawler.config;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 
 @Configuration
 @ComponentScan(basePackages = {"com.ff14"})
@@ -18,7 +19,7 @@ public class CrawlerConfig {
 	private String WEBDRIVER_PATH ;
 	
 	@Bean(destroyMethod = "quit")
-	public WebDriver driver(@Value("${webdriver.chrome.driver}") String WEBDRIVER_PATH) {
+	public WebDriver driver(@Value("${webdriver.chrome.driver}") String WEBDRIVER_PATH) throws MalformedURLException {
 
 		System.out.println("WEBDRIVER_PATH: " + WEBDRIVER_PATH);
 		//若瀏覽器安裝位置為預設則webDriver會自動搜尋path設定的位置，也可以使用System.setProperty 來指定路徑
@@ -30,7 +31,8 @@ public class CrawlerConfig {
 //        options.addArguments("--headless","--disable-gpu","--remote-allow-origins=*");  // windows環境目前能正常啟動的參數 
         options.addArguments("--headless","--no-sandbox","--disable-dev-shm-usage","--remote-allow-origins=*"); // linux環境目前能正常啟動的參數 
         
-		return new ChromeDriver(options);
+        WebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444"), options);
+        return driver;
 	}
 		
 }

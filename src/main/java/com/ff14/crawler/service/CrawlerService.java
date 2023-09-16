@@ -1,6 +1,7 @@
 package com.ff14.crawler.service;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,8 +13,8 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -128,7 +129,9 @@ System.out.println("目前是第幾項: " + (i+1));
 		CrawlerService wikiParser = new CrawlerService();
 		ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");   
-		wikiParser.driver = new ChromeDriver(options);
+//		wikiParser.driver = new ChromeDriver(options);
+        wikiParser.driver = new RemoteWebDriver(new URL("http://localhost:4444"), options);
+		
 		
 		wikiParser.getHouseList();
 		
