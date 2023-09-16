@@ -31,7 +31,7 @@ public class CrawlerConfig {
 //        options.addArguments("--headless","--disable-gpu","--remote-allow-origins=*");  // windows環境目前能正常啟動的參數 
         options.addArguments("--headless","--no-sandbox","--disable-dev-shm-usage","--remote-allow-origins=*"); // linux環境目前能正常啟動的參數 
         
-        WebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444"), options);
+        WebDriver driver = new RemoteWebDriver(new URL(WEBDRIVER_PATH), options);
         return driver;
 	}
 		

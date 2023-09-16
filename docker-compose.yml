@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  my-spring-boot-app:
+    build:
+      context: .
+      dockerfile: Dockerfile_spring_boot
+    ports:
+      - "8090:8090"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - WEBDRIVER_CHROME_DRIVER=http://selenium-standalone-chrome:4444  # 這裡覆蓋配置
+
+  selenium-standalone-chrome:
+    image: selenium/standalone-chrome:latest
+    ports:
+      - "4444:4444"
+    shm_size: '2g'
