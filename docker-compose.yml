@@ -13,5 +13,5 @@ services:
   selenium-standalone-chrome:
     image: selenium/standalone-chrome:latest
     ports:
-      - "4444:4444"
+      - "127.0.0.1:4444:4444"
     shm_size: '2g'
