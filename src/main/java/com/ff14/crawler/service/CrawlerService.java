@@ -133,6 +133,7 @@ System.out.println("目前是第幾項: " + (i+1));
         wikiParser.driver = new RemoteWebDriver(new URL("http://localhost:4444"), options);
 		
         
+        
 		
 		wikiParser.getHouseList();
 		
