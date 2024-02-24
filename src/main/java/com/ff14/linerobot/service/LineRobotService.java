@@ -41,7 +41,7 @@ public class LineRobotService {
 System.out.println("line收到的訊息為: " + receiveText);	
 			if(receiveText.startsWith("!房屋")) {
 				houseList = crawlerService.getHouseList();
-				text(event.getString("replyToken"), houseList);
+				text(event.getString("replyToken"), houseList.substring(0,100));
 			}else if(receiveText.startsWith("!機器人")) {
 				text(event.getString("replyToken"), "庫啵! 我現在是沒有功能的廢物機器人(′゜ω。‵)");
 			};
