@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 @Configuration
 @ComponentScan(basePackages = {"com.ff14"})
@@ -19,6 +20,7 @@ public class CrawlerConfig {
 	private String WEBDRIVER_PATH ;
 	
 	@Bean(destroyMethod = "quit")
+	@Scope("prototype")
 	public WebDriver driver(@Value("${webdriver.chrome.driver}") String WEBDRIVER_PATH) throws MalformedURLException {
 
 		System.out.println("WEBDRIVER_PATH: " + WEBDRIVER_PATH);
