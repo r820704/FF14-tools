@@ -11,7 +11,7 @@ services:
       - WEBDRIVER_CHROME_DRIVER=http://selenium-standalone-chrome:4444  # 這裡覆蓋配置
 
   selenium-standalone-chrome:
-    image: selenium/standalone-chrome:latest
+    image: selenium/standalone-chrome:4.18.0
     ports:
       - "127.0.0.1:4444:4444"
     shm_size: '2g'
