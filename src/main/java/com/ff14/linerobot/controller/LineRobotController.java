@@ -8,6 +8,8 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.ff14.linerobot.entity.LineUser;
+import com.ff14.linerobot.repository.LineUserRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,11 +38,18 @@ public class LineRobotController {
 	private LineRobotService lineRobotService;
 	@Autowired
 	private LineRobotPushService lineRobotPushService;
-	
+	@Autowired
+	private LineUserRepository lineUserRepository;
+
+
 	@GetMapping("/test")
 	public ResponseEntity test() {
+
+		lineUserRepository.saveAndFlush(new LineUser("123","test"));
+
 		return new ResponseEntity("Hello J A V A!!", HttpStatus.OK);
 	}
+
 
 	@PostMapping("/messaging")
 	public ResponseEntity messagingAPI(@RequestHeader("X-Line-Signature") String X_Line_Signature,
