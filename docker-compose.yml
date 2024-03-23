@@ -9,6 +9,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - WEBDRIVER_CHROME_DRIVER=http://selenium-standalone-chrome:4444/wd/hub
+      - SPRING_DATASOURCE_URL=jdbc:mysql://ff14_mysql:4306/ff14
     networks:
       - app-network
 
