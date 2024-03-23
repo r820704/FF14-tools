@@ -18,8 +18,8 @@ services:
       - "127.0.0.1:4444:4444"
     shm_size: '2g'
     networks:
-      - app-network
+      - ff14-app-network
 
 networks:
-  app-network:
+  ff14-app-network:
     external: true
