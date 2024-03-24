@@ -2,6 +2,7 @@ package com.ff14.linerobot.service;
 
 import java.io.IOException;
 
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriver;
@@ -23,6 +24,7 @@ import okio.Buffer;
 import okio.BufferedSink;
 
 @Component
+@Slf4j
 public class LineRobotService {
 	private OkHttpClient client = new OkHttpClient();
 	@Value("${line.user.channel.token}")
@@ -86,7 +88,8 @@ System.out.println("line收到的訊息為: " + receiveText);
 
 			@Override
 			public void onResponse(Call call, Response response) throws IOException {
-				System.out.println(response.body());
+				String result = response.body().string();
+				log.info("Line reply api result:" + result);
 			}
 
 			@Override
