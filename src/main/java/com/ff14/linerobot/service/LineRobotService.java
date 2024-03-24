@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ff14.linerobot.entity.LineUserProfile;
+import com.ff14.linerobot.entity.pk.LineUserProfilePrimaryKey;
 import com.ff14.linerobot.repository.LineUserProfileRepository;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
@@ -33,7 +34,6 @@ public class LineRobotService {
 	private CrawlerService crawlerService;
 	@Autowired
 	private LineUserProfileRepository lineUserProfileRepository;
-	private ExecutorService executor = Executors.newCachedThreadPool();
 	public void doAction(JSONObject event) throws InterruptedException {
 
 		switch (event.getJSONObject("message").getString("type")) {
@@ -138,7 +138,9 @@ public class LineRobotService {
 
 					String result = responseBody.string();
 					LineUserProfile userProfile = parseUserProfile(result);
-					lineUserProfileRepository.saveAndFlush(userProfile);
+					if(!lineUserProfileRepository.existsById(new LineUserProfilePrimaryKey(userProfile.getChannel(), userProfile.getUserId()))){
+						lineUserProfileRepository.saveAndFlush(userProfile);
+					}
 					future.complete(userProfile); // 完成 CompletableFuture
 				} catch (IOException e) {
 					future.completeExceptionally(e);

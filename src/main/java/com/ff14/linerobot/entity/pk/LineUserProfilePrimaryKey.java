@@ -1,8 +1,15 @@
 package com.ff14.linerobot.entity.pk;
 
+import lombok.*;
+
 import javax.persistence.Column;
 import java.io.Serializable;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@EqualsAndHashCode
 public class LineUserProfilePrimaryKey implements Serializable {
 
     @Column(name = "channel")
