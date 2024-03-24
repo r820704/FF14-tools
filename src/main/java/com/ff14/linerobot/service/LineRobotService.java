@@ -2,6 +2,9 @@ package com.ff14.linerobot.service;
 
 import java.io.IOException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ff14.linerobot.entity.LineUserProfile;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,6 +39,9 @@ public class LineRobotService {
 	private CrawlerService crawlerService;
 	
 	public void doAction(JSONObject event) throws InterruptedException {
+
+
+
 		switch (event.getJSONObject("message").getString("type")) {
 		case "text":
 			String receiveText = event.getJSONObject("message").getString("text");
@@ -98,6 +104,34 @@ System.out.println("line收到的訊息為: " + receiveText);
 			}
 		});
 	}
-	
-	
+
+	public LineUserProfile getLineUserProfile(String groupId, String userId, JSONObject json) throws IOException {
+		String url = "https://api.line.me/v2/bot/group/" + groupId + "/member/" + userId;
+
+		Request request = new Request.Builder()
+				.url(url)
+				.header("Authorization", "Bearer " + LINE_MESSAGING_TOKEN) // 替换你的LINE_MESSAGING_TOKEN
+				.post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString()))
+				.build();
+
+		// 使用execute方法發送同步請求
+		try (Response response = client.newCall(request).execute()) {
+			if (response.isSuccessful()) {
+				String result = response.body().string();
+                return parseUserProfile(result);
+			} else {
+				throw new IOException("Unexpected code " + response);
+			}
+		}
+		// 根据你的需要处理异常或者失败的情况
+	}
+
+	private LineUserProfile parseUserProfile(String result) throws JsonProcessingException {
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		LineUserProfile lineUserProfile = objectMapper.readValue(result, LineUserProfile.class);
+		lineUserProfile.setChannel("Messaging API");
+		return lineUserProfile;
+	}
+
 }
