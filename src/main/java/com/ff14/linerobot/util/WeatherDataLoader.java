@@ -39,15 +39,15 @@ public class WeatherDataLoader {
             // thanks lulu's Tool for this calculation
 
             // Get seconds since Jan 1st 1970
-            long unixTimestamp = Instant.now().getEpochSecond();
+            long earthEpochSeconds = Instant.now().getEpochSecond();
 
             // Get Eorzean hours/days since (1 Eorzean hour = 175 seconds)
-            long eorzeanHours = unixTimestamp / 175;
-            long eorzeanDays = eorzeanHours / 24;
+            long eorzeanEpochHours = (long) FF14TimeUtil.getEorzeanEpochHours(earthEpochSeconds);
+            long eorzeanEpochDays = eorzeanEpochHours / 24;
 
             // calculate when is this weather interval start, and convert to earth time
-            long hoursAfterIntervalStart = (eorzeanHours % 24) - (((eorzeanHours % 24)/8) * 8);
-            long epochTimeWhenIntervalStart = (eorzeanHours - hoursAfterIntervalStart) * 175;
+            long hoursAfterIntervalStart = (eorzeanEpochHours % 24) - (((eorzeanEpochHours % 24)/8) * 8);
+            long epochTimeWhenIntervalStart = (eorzeanEpochHours - hoursAfterIntervalStart) * 175;
             System.out.println(epochTimeWhenIntervalStart);
             Instant instant = Instant.ofEpochSecond(epochTimeWhenIntervalStart);
             ZoneId zoneId = ZoneId.of("Asia/Taipei");
@@ -56,7 +56,7 @@ public class WeatherDataLoader {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String formattedDateTime = localDateTime.format(formatter);
             System.out.println(formattedDateTime); // Output: 2021-06-29 12:13:51
-            System.out.println("ET " + ((eorzeanHours - hoursAfterIntervalStart) % 24) + ":00" ); // EorzeanTime
+            System.out.println("ET " + ((eorzeanEpochHours - hoursAfterIntervalStart) % 24) + ":00" ); // EorzeanTime
 
 
         } catch (Exception e) {

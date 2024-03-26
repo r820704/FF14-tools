@@ -8,12 +8,12 @@ public class FF14TimeUtil {
     /**
      * Converts Earth time (in seconds since the Unix epoch) to Eorzean time.
      *
-     * @param earthEpochSecond The Earth time in seconds since the Unix epoch.
+     * @param earthEpochSeconds The Earth time in seconds since the Unix epoch.
      * @return LocalTime representing the equivalent time in Eorzea.
      */
-    public static LocalTime convertEarthTimeToEorzeanTime(long earthEpochSecond) {
+    public static LocalTime convertEarthTimeToEorzeanTime(long earthEpochSeconds) {
 
-        double eorzeanEpochHours = getEorzeanEpochHours(earthEpochSecond);
+        double eorzeanEpochHours = getEorzeanEpochHours(earthEpochSeconds);
         double eorzeanHours = (eorzeanEpochHours % 24);
         double eorzeanMinutes = (eorzeanHours - (int) eorzeanHours) * 60;
 
@@ -25,7 +25,7 @@ public class FF14TimeUtil {
 
     }
 
-    public static double getEorzeanEpochHours(long earthEpochSecond){
-        return  (double) earthEpochSecond / 175;
+    public static double getEorzeanEpochHours(long earthEpochSeconds){
+        return  (double) earthEpochSeconds / 175;
     }
 }
