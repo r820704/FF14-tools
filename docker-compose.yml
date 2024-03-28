@@ -10,6 +10,7 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - WEBDRIVER_CHROME_DRIVER=http://selenium-standalone-chrome:4444/wd/hub
       - SPRING_DATASOURCE_URL=jdbc:mysql://ff14_mysql:3306/ff14
+      - SPRING_REDIS_HOST=ff14_redis
     networks:
       - ff14-app-network
 
