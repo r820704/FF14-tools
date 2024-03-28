@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,12 +41,15 @@ public class LineRobotController {
 	private LineRobotPushService lineRobotPushService;
 	@Autowired
 	private LineUserProfileRepository lineUserRepository;
+	@Autowired
+	private RedisTemplate<String, String> redisTemplate;
 
 
 	@GetMapping("/test")
 	public ResponseEntity test() {
 
 		lineUserRepository.saveAndFlush(new LineUserProfile(String.valueOf(Math.random()),"test","test","test","test","test"));
+		redisTemplate.opsForValue().set(String.valueOf(Math.random()), "test");
 
 		return new ResponseEntity("Hello J A V A!!", HttpStatus.OK);
 	}
