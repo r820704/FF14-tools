@@ -178,22 +178,6 @@ public class WeatherResourceBuilder {
             System.out.println("No data parsed from JSON.");
         }
 
-//        apiUrl = "https://cafemaker.wakingsands.com/Weather?Columns=ID,Name_chs,Name_en,Name_ja";
-//        jsonInput = restTemplate.getForObject(apiUrl, String.class);
-//
-//        try {
-//            List<Weather> indices = parseJson(jsonInput, Weather.class);
-//            if (indices.isEmpty()) {
-//                System.out.println("No data parsed from JSON.");
-//            } else {
-//                System.out.println("Parsed data: " + indices.toString());
-//            }
-//            String filePath = "src/main/resources/ffxiv/resourcedata/Weather.json";
-//            saveDataToFile(indices, filePath);
-//            System.out.println("Data saved to " + filePath);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
 }

@@ -22,7 +22,7 @@ import java.util.List;
 public class WeatherDataLoader {
 
     public static void main(String[] args) {
-        String fileName = "ffxiv.weather/weather";
+        String fileName = "ffxiv/weather/weather";
 
         try (InputStream is = WeatherDataLoader.class.getClassLoader().getResourceAsStream(fileName);
              BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
