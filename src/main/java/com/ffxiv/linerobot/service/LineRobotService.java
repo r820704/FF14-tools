@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
@@ -31,7 +32,7 @@ public class LineRobotService {
     private CrawlerService crawlerService;
     @Autowired
     private LineUserProfileRepository lineUserProfileRepository;
-    @Autowired
+    @Resource
     private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private ConversationService conversationService;

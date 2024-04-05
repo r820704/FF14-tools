@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 @Service
 public class ConversationServiceImpl implements ConversationService {
 
-    @Autowired
+    @Resource
     private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private WeatherService weatherService;
