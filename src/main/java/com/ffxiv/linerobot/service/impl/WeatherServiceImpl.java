@@ -1,5 +1,6 @@
 package com.ffxiv.linerobot.service.impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ffxiv.linerobot.dto.weather.*;
 import com.ffxiv.linerobot.entity.BotConversationConfig;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -37,17 +39,24 @@ public class WeatherServiceImpl implements WeatherService {
     public void loadWeatherData() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
-        List<WeatherRateIndices> loadedWeatherRateIndicesList =
-                JsonUtil.readJsonFileToList("src/main/resources/ffxiv/resourcedata/WeatherRateIndices.json", WeatherRateIndices.class, mapper);
-        weatherRateIndicesList = Collections.unmodifiableList(loadedWeatherRateIndicesList);
+        // 使用ClassLoader來讀取資源文件
+        try (InputStream weatherRateIndicesStream = getClass().getClassLoader().getResourceAsStream("ffxiv/resourcedata/WeatherRateIndices.json")) {
+            List<WeatherRateIndices> loadedWeatherRateIndicesList =
+                    mapper.readValue(weatherRateIndicesStream, new TypeReference<List<WeatherRateIndices>>(){});
+            weatherRateIndicesList = Collections.unmodifiableList(loadedWeatherRateIndicesList);
+        }
 
-        List<TerritoryType> loadedTerritoryTypeList =
-                JsonUtil.readJsonFileToList("src/main/resources/ffxiv/resourcedata/TerritoryType.json", TerritoryType.class, mapper);
-        territoryTypeList = Collections.unmodifiableList(loadedTerritoryTypeList);
+        try (InputStream territoryTypeStream = getClass().getClassLoader().getResourceAsStream("ffxiv/resourcedata/TerritoryType.json")) {
+            List<TerritoryType> loadedTerritoryTypeList =
+                    mapper.readValue(territoryTypeStream, new TypeReference<List<TerritoryType>>(){});
+            territoryTypeList = Collections.unmodifiableList(loadedTerritoryTypeList);
+        }
 
-        List<Weather> loadedWeatherList =
-                JsonUtil.readJsonFileToList("src/main/resources/ffxiv/resourcedata/Weather.json", Weather.class, mapper);
-        weatherList = Collections.unmodifiableList(loadedWeatherList);
+        try (InputStream weatherStream = getClass().getClassLoader().getResourceAsStream("ffxiv/resourcedata/Weather.json")) {
+            List<Weather> loadedWeatherList =
+                    mapper.readValue(weatherStream, new TypeReference<List<Weather>>(){});
+            weatherList = Collections.unmodifiableList(loadedWeatherList);
+        }
     }
 
     @Override
