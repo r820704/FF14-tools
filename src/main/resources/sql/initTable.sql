@@ -1,9 +1,10 @@
 -- bot_conversation_config
 
-
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('directory', '', 'a0', '歡迎使用以下功能，請說出要使用的功能代號');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', '', 'a1', '艾歐澤亞天氣');
-INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('time', '', 'a1', '艾歐澤亞時間');
+INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('time', '', 'a2', '艾歐澤亞時間');
+
+-- use src/main/resources/ffxiv/weather/maintain_list to produce conversation option
 
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b1', 'Limsa Lominsa');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b2', 'Middle La Noscea');
@@ -19,7 +20,7 @@ INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) V
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b12', 'South Shroud');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b13', 'North Shroud');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b14', 'The Lavender Beds');
-INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b15', 'Ul\dah');
+INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b15', 'Ul\'dah');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b16', 'Western Thanalan');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b17', 'Central Thanalan');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b18', 'Eastern Thanalan');
@@ -38,7 +39,7 @@ INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) V
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b31', 'The Dravanian Hinterlands');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b32', 'The Churning Mists');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b33', 'Mor Dhona');
-INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b34', 'Rhalgr\s Reach');
+INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b34', 'Rhalgr\'s Reach');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b35', 'The Fringes');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b36', 'The Peaks');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b37', 'The Lochs');
@@ -59,7 +60,7 @@ INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) V
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b52', 'Kholusia');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b53', 'Amh Araeng');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b54', 'Il Mheg');
-INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b55', 'The Rak\tika Greatwood');
+INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b55', 'The Rak\'tika Greatwood');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b56', 'The Tempest');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b57', 'Old Sharlayan');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b58', 'Radz-at-Han');
@@ -70,3 +71,4 @@ INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) V
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b63', 'Elpis');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b64', 'Ultima Thule');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b65', 'Unnamed Island');
+
