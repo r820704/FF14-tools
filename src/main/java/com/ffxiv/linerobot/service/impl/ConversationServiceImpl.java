@@ -39,7 +39,8 @@ public class ConversationServiceImpl implements ConversationService {
         String userId = lineUserProfile.getUserId();
         String reply = "";
         List<BotConversationConfig> nextLevelConversation = null;
-        String userInputParam = parseReceiveTextToConversationParam(receiveText);
+        String userInputParam = receiveText;
+//        String userInputParam = parseReceiveTextToConversationParam(receiveText);
         log.info("userInputParam:" + userInputParam );
 
 
@@ -59,9 +60,9 @@ public class ConversationServiceImpl implements ConversationService {
                 getReply(lineUserProfile, receiveText);
             }
             validateUserInputAgainstConfig(topic, parentId, userInputParam);
-            nextLevelConversation = getNextLevelConversation(topic, userInputParam);
             switch (topic) {
                 case "weather":
+                    nextLevelConversation = getNextLevelConversation(topic, userInputParam);
                     if (nextLevelConversation.isEmpty()) {
                         // @weatherParameter 為 bot_conversation_config.conversation_id
                         // 沒有下一階對話時代表要回的不是對話選項而是處理的結果
@@ -83,6 +84,7 @@ public class ConversationServiceImpl implements ConversationService {
                     // 看完index後，user發送的訊息會在這邊，此時session中的topic因為還沒進入任一個主題，所以是""
                     String successConversationTitle = getSuccessConversationTitle(lineUserProfile);
                     if (userInputParam.equals("a1")) {
+                        nextLevelConversation = getNextLevelConversation("weather", userInputParam);
                         reply = composeWeatherConversationReplyOptions(successConversationTitle, nextLevelConversation);
                         setConversationSession(userId, "weather", userInputParam);
                     } else if (userInputParam.equals("a2")) {
@@ -108,7 +110,7 @@ public class ConversationServiceImpl implements ConversationService {
         List<BotConversationConfig> conversationList = getConversationByParentId(parentId);
         BotConversationConfig botConversationConfig = conversationList
                 .stream()
-                .filter(conversation -> StringUtils.equals(conversation.getDetail(), userInputParam))
+                .filter(conversation -> StringUtils.equals(conversation.getConversationId(), userInputParam))
                 .findFirst()
                 .orElseThrow();
 

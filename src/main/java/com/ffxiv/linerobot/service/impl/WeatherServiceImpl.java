@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ffxiv.linerobot.dto.weather.*;
 import com.ffxiv.linerobot.entity.BotConversationConfig;
+import com.ffxiv.linerobot.entity.pk.BotConversationConfigPrimaryKey;
 import com.ffxiv.linerobot.repository.BotConversationConfigRepository;
 import com.ffxiv.linerobot.service.WeatherService;
 import com.ffxiv.linerobot.util.FFXIVTimeUtil;
@@ -64,7 +65,7 @@ public class WeatherServiceImpl implements WeatherService {
 
         BotConversationConfig botConversationConfig =
                 botConversationConfigRepository
-                        .findById(BotConversationConfig.builder().topic("weather").conversationId(userInputParam).build())
+                        .findById(BotConversationConfigPrimaryKey.builder().topic("weather").conversationId(userInputParam).build())
                         .orElse(null);
         if (botConversationConfig == null) {
             throw new RuntimeException("無此選項");
