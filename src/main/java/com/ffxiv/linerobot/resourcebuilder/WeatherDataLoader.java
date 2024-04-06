@@ -77,7 +77,7 @@ public class WeatherDataLoader {
                     JsonUtil.readJsonFileToList("src/main/resources/ffxiv/resourcedata/TerritoryType.json", TerritoryType.class, mapper);
             List<Weather> weatherList =
                     JsonUtil.readJsonFileToList("src/main/resources/ffxiv/resourcedata/Weather.json", Weather.class, mapper);
-            String targetPlace = "Limsa Lominsa";
+            String targetPlace = "Elpis";
 
             // get forecastTarget
             long timeChunk = (eorzeanEpochHours % 24) - (eorzeanEpochHours % 8);

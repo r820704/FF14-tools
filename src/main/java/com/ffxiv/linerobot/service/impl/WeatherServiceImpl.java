@@ -72,6 +72,7 @@ public class WeatherServiceImpl implements WeatherService {
         }
 
         String targetPlaceNameEn = botConversationConfig.getDetail();
+        String targetPlaceNameChs = getPlaceNameChs(targetPlaceNameEn);
 
         // Get seconds since Jan 1st 1970
         long earthEpochSeconds = Instant.now().getEpochSecond();
@@ -100,14 +101,14 @@ public class WeatherServiceImpl implements WeatherService {
             List<WeatherConversationResultDetail> weatherConversationResultDetailList = null;
             if (weatherConversationResultList.isEmpty()) {
                 WeatherConversationResult weatherConversationResult = new WeatherConversationResult();
-                weatherConversationResult.setPlaceName(targetWeather.getNameChs());
+                weatherConversationResult.setPlaceName(targetPlaceNameChs);
                 weatherConversationResultDetailList = new ArrayList<>();
                 weatherConversationResult.setDetails(weatherConversationResultDetailList);
                 weatherConversationResultList.add(weatherConversationResult);
             }else {
                 weatherConversationResultDetailList = Objects.requireNonNull(weatherConversationResultList
                         .stream()
-                        .filter(result -> StringUtils.equals(targetWeather.getNameChs(), result.getPlaceName()))
+                        .filter(result -> StringUtils.equals(targetPlaceNameChs, result.getPlaceName()))
                         .findFirst()
                         .orElse(null))
                         .getDetails();
@@ -122,6 +123,18 @@ public class WeatherServiceImpl implements WeatherService {
         }
 
         return weatherConversationResultList;
+    }
+
+    private String getPlaceNameChs(String targetPlaceNameEn) {
+
+        TerritoryType targetTerritoryType = territoryTypeList
+                .stream()
+                .filter(territoryType -> territoryType.getPlaceName() != null &&
+                        StringUtils.equals(StringUtils.trim(territoryType.getPlaceName().getNameEn()), targetPlaceNameEn))
+                .findFirst().orElse(null);
+
+        return  targetTerritoryType.getPlaceName().getNameChs();
+
     }
 
     private Weather getTargetWeather(String targetPlaceNameEn, int forecastTarget) {
@@ -159,15 +172,16 @@ public class WeatherServiceImpl implements WeatherService {
 
     // https://github.com/xivapi/ffxiv-datamining/blob/master/docs/Weather.md
     public int getForecastTarget(long eorzeanEpochHours) {
+        //todo 解決計算結果不一致的問題
         long eorzeanEpochDays = eorzeanEpochHours / 24;
         long timeChunk = (eorzeanEpochHours % 24) - (eorzeanEpochHours % 8);
         timeChunk = (timeChunk + 8) % 24;
 
-        long seed = eorzeanEpochDays * 100 + timeChunk;
+        int seed = (int) (eorzeanEpochDays * 100 + timeChunk);
 
         // Do a little hashing
-        long step1 = (seed << 11) ^ seed;
-        long step2 = (step1 >>> 8) ^ step1;
+        int step1 = (seed << 11) ^ seed;
+        int step2 = (step1 >>> 8) ^ step1;
 
         // Return a number between 0-99 inclusive
         int forecastTarget = (int) (step2 % 100);

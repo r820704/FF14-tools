@@ -26,7 +26,7 @@ public class TestRunner implements CommandLineRunner {
                 }
                 // 模拟LineUserProfile输入
                 LineUserProfile userProfile = new LineUserProfile();
-                userProfile.setUserId("測試UserId1234");
+                userProfile.setUserId("測試UserId12345");
                 userProfile.setDisplayName("測試DisplayName");
 
                 String reply = conversationService.getReply(userProfile, input);
