@@ -7,6 +7,7 @@ import com.ffxiv.linerobot.repository.BotConversationConfigRepository;
 import com.ffxiv.linerobot.service.ConversationService;
 import com.ffxiv.linerobot.service.WeatherService;
 import com.ffxiv.linerobot.util.FFXIVTimeUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ConversationServiceImpl implements ConversationService {
 
     @Resource
@@ -38,11 +40,14 @@ public class ConversationServiceImpl implements ConversationService {
         String reply = "";
         List<BotConversationConfig> nextLevelConversation = null;
         String userInputParam = parseReceiveTextToConversationParam(receiveText);
+        log.info("userInputParam:" + userInputParam );
+
 
         if (!isConversationSessionExists(userId)) {
             nextLevelConversation = getConversationByParentId("");
             String successConversationTitle = getSuccessConversationTitle(lineUserProfile);
             setConversationSession(userId, "", "");
+            log.info("設定完conversationSession");
             reply = composeWeatherConversationReplyOptions(successConversationTitle, nextLevelConversation);
         } else {
             Map<String, String> conversationSession = getConversationSession(userId);

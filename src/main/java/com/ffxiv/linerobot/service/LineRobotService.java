@@ -67,6 +67,7 @@ public class LineRobotService {
         log.info("line收到的訊息為: " + receiveText);
         //todo 這邊當對話進行中時，應要先確認session是否存在，再呼叫conversationService 例如輸入: b1
         if (receiveText.startsWith("塔塔露") || conversationService.isConversationSessionExists(lineUserProfile.getUserId()) ) {
+            log.info("準備呼叫conversationService");
             String reply = conversationService.getReply(lineUserProfile, receiveText);
             text(event.getString("replyToken"), reply);
         } else if (receiveText.startsWith("!房屋")) {
