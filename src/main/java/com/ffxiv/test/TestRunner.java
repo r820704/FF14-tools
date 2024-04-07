@@ -17,6 +17,12 @@ public class TestRunner implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
     try (Scanner scanner = new Scanner(System.in)) {
+      System.out.print("請輸入userid: ");
+      String userId = scanner.nextLine();
+      LineUserProfile userProfile = new LineUserProfile();
+      userProfile.setUserId(userId);
+      userProfile.setDisplayName("測試DisplayName");
+
       System.out.println("請輸入測試指令:");
       while (true) {
         String input = scanner.nextLine();
@@ -24,9 +30,6 @@ public class TestRunner implements CommandLineRunner {
           break;
         }
         // 模拟LineUserProfile输入
-        LineUserProfile userProfile = new LineUserProfile();
-        userProfile.setUserId("測試UserId12345");
-        userProfile.setDisplayName("測試DisplayName");
 
         String reply = conversationService.getReply(userProfile, input);
         System.out.println(reply);

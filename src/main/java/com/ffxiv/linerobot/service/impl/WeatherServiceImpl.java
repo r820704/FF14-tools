@@ -36,6 +36,25 @@ public class WeatherServiceImpl implements WeatherService {
   public static List<Weather> weatherList = new ArrayList<>();
   @Autowired BotConversationConfigRepository botConversationConfigRepository;
 
+  private static TerritoryType getTerritoryType(String targetPlaceNameEn) {
+    TerritoryType targetTerritoryType =
+        territoryTypeList.stream()
+            .filter(
+                territoryType ->
+                    territoryType.getPlaceName() != null
+                        && territoryType.getWeatherRateId()
+                            != 0 // WeatherRateId=0的資料都不是真的被拿來使用的資料，例: 利姆萨·罗敏萨 & 利姆萨·罗敏萨上层甲板
+                        && (StringUtils.equals(
+                                StringUtils.trim(territoryType.getPlaceName().getNameEn()),
+                                targetPlaceNameEn)
+                            || StringUtils.contains(
+                                StringUtils.trim(territoryType.getPlaceName().getNameEn()),
+                                targetPlaceNameEn)))
+            .findFirst()
+            .orElse(null);
+    return targetTerritoryType;
+  }
+
   @PostConstruct
   public void loadWeatherData() throws IOException {
     ObjectMapper mapper = new ObjectMapper();
@@ -152,31 +171,13 @@ public class WeatherServiceImpl implements WeatherService {
   @Override
   public String getPlaceNameChs(String targetPlaceNameEn) {
 
-    TerritoryType targetTerritoryType =
-        territoryTypeList.stream()
-            .filter(
-                territoryType ->
-                    territoryType.getPlaceName() != null
-                        && StringUtils.equals(
-                            StringUtils.trim(territoryType.getPlaceName().getNameEn()),
-                            targetPlaceNameEn.trim()))
-            .findFirst()
-            .orElse(null);
+    TerritoryType targetTerritoryType = getTerritoryType(targetPlaceNameEn.trim());
 
     return targetTerritoryType != null ? targetTerritoryType.getPlaceName().getNameChs() : "";
   }
 
   private Weather getTargetWeather(String targetPlaceNameEn, int forecastTarget) {
-    TerritoryType targetTerritoryType =
-        territoryTypeList.stream()
-            .filter(
-                territoryType ->
-                    territoryType.getPlaceName() != null
-                        && StringUtils.equals(
-                            StringUtils.trim(territoryType.getPlaceName().getNameEn()),
-                            targetPlaceNameEn))
-            .findFirst()
-            .orElse(null);
+    TerritoryType targetTerritoryType = getTerritoryType(targetPlaceNameEn);
 
     WeatherRateIndices targetWeatherRateIndices =
         weatherRateIndicesList.stream()

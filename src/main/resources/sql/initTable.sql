@@ -1,13 +1,12 @@
 -- bot_conversation_config
 
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail)
-VALUES ('directory', '', 'a0', '歡迎使用以下功能，請說出要使用的功能代號');
-INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail)
 VALUES ('weather', '', 'a1', '艾歐澤亞天氣');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail)
 VALUES ('time', '', 'a2', '艾歐澤亞時間');
 
 -- use src/main/resources/ffxiv/weather/maintain_list to produce conversation option
+-- nimbletext: INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b$rowNumOne', '$0');
 
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail)
 VALUES ('weather', 'a1', 'b1', 'Limsa Lominsa');
@@ -24,7 +23,7 @@ VALUES ('weather', 'a1', 'b6', 'Upper La Noscea');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail)
 VALUES ('weather', 'a1', 'b7', 'Outer La Noscea');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail)
-VALUES ('weather', 'a1', 'b8', 'The Mist');
+VALUES ('weather', 'a1', 'b8', 'Mist');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail)
 VALUES ('weather', 'a1', 'b9', 'Gridania');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail)
@@ -52,7 +51,7 @@ VALUES ('weather', 'a1', 'b20', 'Northern Thanalan');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail)
 VALUES ('weather', 'a1', 'b21', 'The Goblet');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail)
-VALUES ('weather', 'a1', 'b22', 'Ishgard');
+VALUES ('weather', 'a1', 'b22', 'Foundation');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail)
 VALUES ('weather', 'a1', 'b23', 'Coerthas Central Highlands');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail)
@@ -139,4 +138,5 @@ INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail)
 VALUES ('weather', 'a1', 'b64', 'Ultima Thule');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail)
 VALUES ('weather', 'a1', 'b65', 'Unnamed Island');
+
 

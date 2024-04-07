@@ -36,7 +36,7 @@ public class ConversationServiceImpl implements ConversationService {
     String reply = "";
     List<BotConversationConfig> nextLevelConversation = null;
     String userInputParam = receiveText;
-    //        String userInputParam = parseReceiveTextToConversationParam(receiveText);
+    // todo 在無符合選項時會直接拋NoSuchElement Exception，沒符合時應保持當前進度
     log.info("userInputParam:" + userInputParam);
 
     if (!isConversationSessionExists(userId)) {
@@ -62,7 +62,8 @@ public class ConversationServiceImpl implements ConversationService {
           if (nextLevelConversation.isEmpty()) {
             // @weatherParameter 為 bot_conversation_config.conversation_id
             // 沒有下一階對話時代表要回的不是對話選項而是處理的結果
-
+            // todo 回覆結果的地球時間要格式化，只秀時分秒就好
+            // todo 結束對話時應將session結束，並在對話內容內提示?
             List<WeatherConversationResult> weatherConversationResult =
                 weatherService.getWeatherProbability(userInputParam);
 
@@ -122,6 +123,7 @@ public class ConversationServiceImpl implements ConversationService {
 
   private String composeWeatherConversationReplyResult(
       List<WeatherConversationResult> weatherConversationResult) {
+
     StringBuilder sb = new StringBuilder();
     weatherConversationResult.forEach(
         result -> {
@@ -164,9 +166,21 @@ public class ConversationServiceImpl implements ConversationService {
     if (list.isEmpty()) {
       return "很抱歉，我不知道你說的是甚麼，請再次選擇，或按X回到上一層\n";
     } else {
+
+      list.sort(
+          (o1, o2) -> {
+            // 提取開頭的 字母 後的數字部分
+            String conversationId1 = o1.getConversationId().substring(1);
+            String conversationId2 = o2.getConversationId().substring(1);
+
+            Integer num1 = Integer.parseInt(conversationId1);
+            Integer num2 = Integer.parseInt(conversationId2);
+            return num1.compareTo(num2);
+          });
+
       String listString =
           list.stream()
-              .map(config -> String.join(", ", config.getConversationId(), config.getDetail()))
+              .map(config -> String.join(",", config.getConversationId(), config.getDetail()))
               .collect(Collectors.joining("\n"));
 
       return conversationTitle + "\n" + listString;
@@ -180,7 +194,8 @@ public class ConversationServiceImpl implements ConversationService {
 
     byTopicAndParentId.forEach(
         config -> {
-          if (StringUtils.startsWith(config.getDetail(), "b")) {
+          if (StringUtils.startsWith(config.getConversationId(), "b")
+              && StringUtils.equals(topic, "weather")) {
             String placeNameChs = weatherService.getPlaceNameChs(config.getDetail());
             config.setDetail(placeNameChs);
           }
