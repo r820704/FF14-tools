@@ -14,6 +14,6 @@ public class FFXIVApplication {
 		SpringApplication.run(FFXIVApplication.class, args);
 	}
 
-	
+
 
 }

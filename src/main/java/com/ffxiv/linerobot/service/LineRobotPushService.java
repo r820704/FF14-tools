@@ -31,7 +31,7 @@ public class LineRobotPushService {
 
 	@Autowired
 	private CrawlerService crawlerService;
-	
+
 	public void text(String text) {
 		JSONObject body = new JSONObject();
 		JSONArray messages = new JSONArray();
@@ -74,14 +74,14 @@ public class LineRobotPushService {
 			}
 		});
 	}
-	
+
 	public void pushToLineNotify(String string) {
 
 		// FormBody自帶ContentType=application/x-www-form-urlencoded
         FormBody formBody = new FormBody.Builder()
         		.add("message", string)
                 .build();
-		
+
 		Request request = new Request.Builder().url("https://notify-api.line.me/api/notify")
 				.header("Authorization", "Bearer " + LINE_NOTIFY_TOKEN )
 				.post(formBody).build();
@@ -99,5 +99,5 @@ public class LineRobotPushService {
 			}
 		});
 	}
-	
+
 }

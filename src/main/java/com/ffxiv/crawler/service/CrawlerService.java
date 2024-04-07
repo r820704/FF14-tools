@@ -22,20 +22,20 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CrawlerService {
-	
+
 	@Autowired
 	@Lazy
 	private WebDriver driver;
-	
+
 	public String getHouseList() throws InterruptedException {
-		
+
 		System.out.println("目前的URL :" + driver.getCurrentUrl());
-		
+
 		// 如果當前URL已經進入house查詢畫面，則不重複get，否則會無法成功獲取畫面上elements
 		if(!"https://house.ffxiv.cyou/#/".equals(driver.getCurrentUrl())) {
 			driver.get("https://house.ffxiv.cyou/#/");
 			// 取得pageTitle
-			String title = driver.getTitle();			
+			String title = driver.getTitle();
 		}
 
 		try {
@@ -43,30 +43,30 @@ public class CrawlerService {
 			WebElement selectElement = Boxelement.findElement(By.cssSelector("select"));
 			Select selector = new Select(selectElement);
 			selector.selectByValue("1178");
-			
+
 			WebElement submitButton = driver.findElement(By.className("is-primary"));
-			submitButton.click();			
+			submitButton.click();
 		} catch(ElementNotInteractableException e) {
 			System.out.println("已執行過查詢所以跳過初次選擇伺服器視窗動作");
 		}
-		
-		
+
+
 		List<WebElement> saleItems = driver.findElements(By.className("sale-item"));
 		System.out.println("==========開始列印============");
-		
+
 		StringBuilder houseList = new StringBuilder();
 		TreeMap houseMap = new TreeMap<String, Map>();
-		
-		
+
+
 		houseList.append("以下是僅供個人購買的房屋列表: \n ");
-		
+
 int count = 0;
 		for (int i = 0; i < saleItems.size(); i++) {
 System.out.println("總共有" + saleItems.size() + "項");
-System.out.println("目前是第幾項: " + (i+1));			
+System.out.println("目前是第幾項: " + (i+1));
 //		    WebElement item = driver.findElements(By.className("sale-item")).get(i);
 		    WebElement item = saleItems.get(i);
-		    
+
 		    try {
 		    	WebElement span = item.findElement(By.cssSelector("span[data-tooltip='仅供个人购买']"));
 		    } catch(NoSuchElementException e) {
@@ -83,7 +83,7 @@ System.out.println("目前是第幾項: " + (i+1));
 		    String updateTime = itemContent[5]; // ex: 2022-09-16 23:02:54 更新
 		    String houseResult = "  "  + houseNum_Price + ", "  + beginOrEndTime
 		    		 + "\n" ;
-		    
+
 
 //		    houseList.append(itemContent[0] + ", " + itemContent[1] + ", " + itemContent[3] + ", "  + itemContent[4] + ", "
 //		    		 + itemContent[5] + "\n");
@@ -92,7 +92,7 @@ System.out.println("目前是第幾項: " + (i+1));
 		    	TreeMap<String, StringBuilder> resultMap = (TreeMap<String, StringBuilder>) houseMap.get(houseStatus);
 		    	if(resultMap.containsKey(houseRegion)) {
 		    		StringBuilder tempList = (StringBuilder) resultMap.get(houseRegion);
-		    		tempList.append(houseResult);		    		
+		    		tempList.append(houseResult);
 		    	}else {
 		    		resultMap.put(houseRegion, new StringBuilder(houseResult));
 		    	}
@@ -111,34 +111,34 @@ System.out.println("目前是第幾項: " + (i+1));
 				houseList.append(entry.getValue().get(s) + "\n");
 			}
 		}
-		
-		
-		
+
+
+
 		System.out.println("houseList = " + houseList);
 		System.out.println("總共有:" + count +"項");
 		return houseList.toString();
-		
+
 	}
-	
-	
-	
+
+
+
 	public static void main(String[] args) throws IOException, InterruptedException {
-		
+
 		System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
-		
+
 		CrawlerService wikiParser = new CrawlerService();
 		ChromeOptions options = new ChromeOptions();
-        options.addArguments("--remote-allow-origins=*");   
+        options.addArguments("--remote-allow-origins=*");
 //		wikiParser.driver = new ChromeDriver(options);
         wikiParser.driver = new RemoteWebDriver(new URL("http://localhost:4444"), options);
-		
-        
-        
-		
+
+
+
+
 		wikiParser.getHouseList();
-		
+
 		wikiParser.driver.close();
 
 	}
-	
+
 }

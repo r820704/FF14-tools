@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface WeatherService {
     List<WeatherConversationResult> getWeatherProbability(String userInputParam);
+
+    String getPlaceNameChs(String targetPlaceNameEn);
 }

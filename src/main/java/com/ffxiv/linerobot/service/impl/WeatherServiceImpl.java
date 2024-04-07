@@ -8,7 +8,6 @@ import com.ffxiv.linerobot.entity.pk.BotConversationConfigPrimaryKey;
 import com.ffxiv.linerobot.repository.BotConversationConfigRepository;
 import com.ffxiv.linerobot.service.WeatherService;
 import com.ffxiv.linerobot.util.FFXIVTimeUtil;
-import com.ffxiv.linerobot.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,20 +20,23 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
 public class WeatherServiceImpl implements WeatherService {
 
-    private static final Map<String, List<WeatherCondition>> weatherData = new HashMap<>();
     private static final int DEFAULT_WEATHER_COUNT = 10;
     private static final DateTimeFormatter YYYY_MM_DD = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private static List<WeatherRateIndices> weatherRateIndicesList = new ArrayList<>();
-    private static List<TerritoryType> territoryTypeList = new ArrayList<>();
-    private static List<Weather> weatherList = new ArrayList<>();
+    public static List<WeatherRateIndices> weatherRateIndicesList = new ArrayList<>();
+    public static List<TerritoryType> territoryTypeList = new ArrayList<>();
+    public static List<Weather> weatherList = new ArrayList<>();
     @Autowired
     BotConversationConfigRepository botConversationConfigRepository;
+
 
     @PostConstruct
     public void loadWeatherData() throws IOException {
@@ -43,19 +45,22 @@ public class WeatherServiceImpl implements WeatherService {
         // 使用ClassLoader來讀取資源文件
         try (InputStream weatherRateIndicesStream = getClass().getClassLoader().getResourceAsStream("ffxiv/resourcedata/WeatherRateIndices.json")) {
             List<WeatherRateIndices> loadedWeatherRateIndicesList =
-                    mapper.readValue(weatherRateIndicesStream, new TypeReference<List<WeatherRateIndices>>(){});
+                    mapper.readValue(weatherRateIndicesStream, new TypeReference<List<WeatherRateIndices>>() {
+                    });
             weatherRateIndicesList = Collections.unmodifiableList(loadedWeatherRateIndicesList);
         }
 
         try (InputStream territoryTypeStream = getClass().getClassLoader().getResourceAsStream("ffxiv/resourcedata/TerritoryType.json")) {
             List<TerritoryType> loadedTerritoryTypeList =
-                    mapper.readValue(territoryTypeStream, new TypeReference<List<TerritoryType>>(){});
+                    mapper.readValue(territoryTypeStream, new TypeReference<List<TerritoryType>>() {
+                    });
             territoryTypeList = Collections.unmodifiableList(loadedTerritoryTypeList);
         }
 
         try (InputStream weatherStream = getClass().getClassLoader().getResourceAsStream("ffxiv/resourcedata/Weather.json")) {
             List<Weather> loadedWeatherList =
-                    mapper.readValue(weatherStream, new TypeReference<List<Weather>>(){});
+                    mapper.readValue(weatherStream, new TypeReference<List<Weather>>() {
+                    });
             weatherList = Collections.unmodifiableList(loadedWeatherList);
         }
     }
@@ -105,12 +110,12 @@ public class WeatherServiceImpl implements WeatherService {
                 weatherConversationResultDetailList = new ArrayList<>();
                 weatherConversationResult.setDetails(weatherConversationResultDetailList);
                 weatherConversationResultList.add(weatherConversationResult);
-            }else {
+            } else {
                 weatherConversationResultDetailList = Objects.requireNonNull(weatherConversationResultList
-                        .stream()
-                        .filter(result -> StringUtils.equals(targetPlaceNameChs, result.getPlaceName()))
-                        .findFirst()
-                        .orElse(null))
+                                .stream()
+                                .filter(result -> StringUtils.equals(targetPlaceNameChs, result.getPlaceName()))
+                                .findFirst()
+                                .orElse(null))
                         .getDetails();
             }
             WeatherConversationResultDetail weatherConversationResultDetail = new WeatherConversationResultDetail();
@@ -125,15 +130,16 @@ public class WeatherServiceImpl implements WeatherService {
         return weatherConversationResultList;
     }
 
-    private String getPlaceNameChs(String targetPlaceNameEn) {
+    @Override
+    public String getPlaceNameChs(String targetPlaceNameEn) {
 
         TerritoryType targetTerritoryType = territoryTypeList
                 .stream()
                 .filter(territoryType -> territoryType.getPlaceName() != null &&
-                        StringUtils.equals(StringUtils.trim(territoryType.getPlaceName().getNameEn()), targetPlaceNameEn))
+                        StringUtils.equals(StringUtils.trim(territoryType.getPlaceName().getNameEn()), targetPlaceNameEn.trim()))
                 .findFirst().orElse(null);
 
-        return  targetTerritoryType.getPlaceName().getNameChs();
+        return targetTerritoryType != null ? targetTerritoryType.getPlaceName().getNameChs() : "";
 
     }
 

@@ -38,5 +38,5 @@ public class LogResponseFilter extends OncePerRequestFilter {
             wrapper.copyBodyToResponse();
         }
     }
-    
+
 }
