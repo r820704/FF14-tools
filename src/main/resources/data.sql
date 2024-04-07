@@ -1,3 +1,4 @@
-INSERT INTO HOUSE(houseid) VALUES ('14-5');    
+INSERT INTO HOUSE(houseid)
+VALUES ('14-5');
     
 

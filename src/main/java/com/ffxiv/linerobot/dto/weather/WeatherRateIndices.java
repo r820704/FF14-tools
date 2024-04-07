@@ -1,11 +1,10 @@
 package com.ffxiv.linerobot.dto.weather;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @JsonPropertyOrder({"id", "rates"})
 @Data
@@ -13,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class WeatherRateIndices {
 
-    private int Id;
+  private int Id;
 
-    private List<Rates> rates;
+  private List<Rates> rates;
 }

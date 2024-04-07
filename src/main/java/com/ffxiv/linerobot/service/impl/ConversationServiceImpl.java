@@ -26,12 +26,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ConversationServiceImpl implements ConversationService {
 
-  @Resource
-  private RedisTemplate<String, Object> redisTemplate;
-  @Autowired
-  private WeatherService weatherService;
-  @Autowired
-  private BotConversationConfigRepository botConversationConfigRepository;
+  @Resource private RedisTemplate<String, Object> redisTemplate;
+  @Autowired private WeatherService weatherService;
+  @Autowired private BotConversationConfigRepository botConversationConfigRepository;
 
   @Override
   public String getReply(LineUserProfile lineUserProfile, String receiveText) {
@@ -39,7 +36,7 @@ public class ConversationServiceImpl implements ConversationService {
     String reply = "";
     List<BotConversationConfig> nextLevelConversation = null;
     String userInputParam = receiveText;
-//        String userInputParam = parseReceiveTextToConversationParam(receiveText);
+    //        String userInputParam = parseReceiveTextToConversationParam(receiveText);
     log.info("userInputParam:" + userInputParam);
 
     if (!isConversationSessionExists(userId)) {
@@ -47,8 +44,8 @@ public class ConversationServiceImpl implements ConversationService {
       String successConversationTitle = getSuccessConversationTitle(lineUserProfile);
       setConversationSession(userId, "", "");
       log.info("設定完conversationSession");
-      reply = composeWeatherConversationReplyOptions(successConversationTitle,
-          nextLevelConversation);
+      reply =
+          composeWeatherConversationReplyOptions(successConversationTitle, nextLevelConversation);
     } else {
       Map<String, String> conversationSession = getConversationSession(userId);
       String topic = conversationSession.get("topic");
@@ -66,8 +63,8 @@ public class ConversationServiceImpl implements ConversationService {
             // @weatherParameter 為 bot_conversation_config.conversation_id
             // 沒有下一階對話時代表要回的不是對話選項而是處理的結果
 
-            List<WeatherConversationResult> weatherConversationResult = weatherService.getWeatherProbability(
-                userInputParam);
+            List<WeatherConversationResult> weatherConversationResult =
+                weatherService.getWeatherProbability(userInputParam);
 
             reply = composeWeatherConversationReplyResult(weatherConversationResult);
             removeConversationSession(userId);
@@ -75,24 +72,27 @@ public class ConversationServiceImpl implements ConversationService {
             break;
           } else {
             String successConversationTitle = getSuccessConversationTitle(lineUserProfile);
-            reply = composeWeatherConversationReplyOptions(successConversationTitle,
-                nextLevelConversation);
+            reply =
+                composeWeatherConversationReplyOptions(
+                    successConversationTitle, nextLevelConversation);
             setConversationSession(userId, "weather", userInputParam);
             break;
           }
-//                case "time":
+          //                case "time":
         default:
           // 看完index後，user發送的訊息會在這邊，此時session中的topic因為還沒進入任一個主題，所以是""
           String successConversationTitle = getSuccessConversationTitle(lineUserProfile);
           if (userInputParam.equals("a1")) {
             nextLevelConversation = getNextLevelConversation("weather", userInputParam);
-            reply = composeWeatherConversationReplyOptions(successConversationTitle,
-                nextLevelConversation);
+            reply =
+                composeWeatherConversationReplyOptions(
+                    successConversationTitle, nextLevelConversation);
             setConversationSession(userId, "weather", userInputParam);
           } else if (userInputParam.equals("a2")) {
             // 因為沒有下一層選項所以刪除session
-            reply = FFXIVTimeUtil.convertEarthTimeToEorzeanTime(Instant.now().getEpochSecond())
-                .toString();
+            reply =
+                FFXIVTimeUtil.convertEarthTimeToEorzeanTime(Instant.now().getEpochSecond())
+                    .toString();
             removeConversationSession(userId);
           }
           break;
@@ -104,38 +104,41 @@ public class ConversationServiceImpl implements ConversationService {
   private void removeConversationSession(String userId) {
     String key = "user:" + userId + ":conversation";
     redisTemplate.delete(key);
-
   }
 
-  private void validateUserInputAgainstConfig(String topic, String parentId,
-      String userInputParam) {
+  private void validateUserInputAgainstConfig(
+      String topic, String parentId, String userInputParam) {
 
-    //todo 拋出自訂例外?  上層例外處理?
+    // todo 拋出自訂例外?  上層例外處理?
     List<BotConversationConfig> conversationList = getConversationByParentId(parentId);
-    BotConversationConfig botConversationConfig = conversationList.stream()
-        .filter(
-            conversation -> StringUtils.equals(conversation.getConversationId(), userInputParam))
-        .findFirst().orElseThrow();
-
+    BotConversationConfig botConversationConfig =
+        conversationList.stream()
+            .filter(
+                conversation ->
+                    StringUtils.equals(conversation.getConversationId(), userInputParam))
+            .findFirst()
+            .orElseThrow();
   }
-
 
   private String composeWeatherConversationReplyResult(
       List<WeatherConversationResult> weatherConversationResult) {
     StringBuilder sb = new StringBuilder();
-    weatherConversationResult.forEach(result -> {
-      sb.append("區域:" + result.getPlaceName() + "\n");
-      sb.append("地球時間,艾歐澤亞時間,天氣");
-      result.getDetails().forEach(detail -> {
-        LocalDateTime earthTime = detail.getEarthTime();
-        LocalTime eorzeanTime = detail.getEorzeanTime();
-        String weatherName = detail.getWeatherName();
+    weatherConversationResult.forEach(
+        result -> {
+          sb.append("區域:" + result.getPlaceName() + "\n");
+          sb.append("地球時間,艾歐澤亞時間,天氣");
+          result
+              .getDetails()
+              .forEach(
+                  detail -> {
+                    LocalDateTime earthTime = detail.getEarthTime();
+                    LocalTime eorzeanTime = detail.getEorzeanTime();
+                    String weatherName = detail.getWeatherName();
 
-        sb.append(earthTime + "," + eorzeanTime + "," + weatherName);
-        sb.append("\n");
-
-      });
-    });
+                    sb.append(earthTime + "," + eorzeanTime + "," + weatherName);
+                    sb.append("\n");
+                  });
+        });
 
     return sb.toString();
   }
@@ -156,40 +159,40 @@ public class ConversationServiceImpl implements ConversationService {
     return "嗨~" + displayName + "，以下是可選擇的選項\n";
   }
 
-
-  private String composeWeatherConversationReplyOptions(String conversationTitle,
-      List<BotConversationConfig> list) {
+  private String composeWeatherConversationReplyOptions(
+      String conversationTitle, List<BotConversationConfig> list) {
     if (list.isEmpty()) {
       return "很抱歉，我不知道你說的是甚麼，請再次選擇，或按X回到上一層\n";
     } else {
-      String listString = list.stream()
-          .map(config -> String.join(", ", config.getConversationId(), config.getDetail()))
-          .collect(Collectors.joining("\n"));
+      String listString =
+          list.stream()
+              .map(config -> String.join(", ", config.getConversationId(), config.getDetail()))
+              .collect(Collectors.joining("\n"));
 
       return conversationTitle + "\n" + listString;
     }
   }
 
-
   private List<BotConversationConfig> getNextLevelConversation(String topic, String parentId) {
 
-    List<BotConversationConfig> byTopicAndParentId = botConversationConfigRepository.findByTopicAndParentId(
-        topic, parentId);
+    List<BotConversationConfig> byTopicAndParentId =
+        botConversationConfigRepository.findByTopicAndParentId(topic, parentId);
 
-    byTopicAndParentId.forEach(config -> {
-      if (StringUtils.startsWith(config.getDetail(), "b")) {
-        String placeNameChs = weatherService.getPlaceNameChs(config.getDetail());
-        config.setDetail(placeNameChs);
-      }
-    });
+    byTopicAndParentId.forEach(
+        config -> {
+          if (StringUtils.startsWith(config.getDetail(), "b")) {
+            String placeNameChs = weatherService.getPlaceNameChs(config.getDetail());
+            config.setDetail(placeNameChs);
+          }
+        });
 
     return byTopicAndParentId;
   }
 
   private Map<String, String> getConversationSession(String userId) {
     String key = "user:" + userId + ":conversation";
-    Map<String, String> conversationSession = (Map<String, String>) redisTemplate.opsForValue()
-        .get(key);
+    Map<String, String> conversationSession =
+        (Map<String, String>) redisTemplate.opsForValue().get(key);
 
     return conversationSession;
   }
@@ -210,5 +213,4 @@ public class ConversationServiceImpl implements ConversationService {
     Boolean exists = redisTemplate.hasKey(key);
     return Boolean.TRUE.equals(exists);
   }
-
 }

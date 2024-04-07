@@ -1,18 +1,16 @@
 package com.ffxiv.linerobot.dto.weather;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class WeatherConversationResult {
 
-    private String placeName;
+  private String placeName;
 
-    private List<WeatherConversationResultDetail> details;
-
+  private List<WeatherConversationResultDetail> details;
 }

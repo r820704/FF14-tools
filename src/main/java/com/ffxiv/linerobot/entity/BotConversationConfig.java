@@ -1,10 +1,8 @@
 package com.ffxiv.linerobot.entity;
 
-
 import com.ffxiv.linerobot.entity.pk.BotConversationConfigPrimaryKey;
-import lombok.*;
-
 import javax.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "bot_conversation_config")
@@ -16,15 +14,13 @@ import javax.persistence.*;
 @EqualsAndHashCode
 public class BotConversationConfig {
 
-    @Id
-    private String topic;
+  @Id private String topic;
 
-    @Column(name = "parent_id")
-    private String parentId;
+  @Column(name = "parent_id")
+  private String parentId;
 
-    @Id
-    private String conversationId;
+  @Id private String conversationId;
 
-    @Column(name = "detail")
-    private String detail;
+  @Column(name = "detail")
+  private String detail;
 }

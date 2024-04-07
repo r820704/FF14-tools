@@ -10,15 +10,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Weather {
 
-    @JsonProperty("ID")
-    private int id;
+  @JsonProperty("ID")
+  private int id;
 
-    @JsonProperty("Name_chs")
-    private String nameChs;
+  @JsonProperty("Name_chs")
+  private String nameChs;
 
-    @JsonProperty("Name_en")
-    private String nameEn;
+  @JsonProperty("Name_en")
+  private String nameEn;
 
-    @JsonProperty("Name_ja")
-    private String nameJa;
+  @JsonProperty("Name_ja")
+  private String nameJa;
 }

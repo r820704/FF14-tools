@@ -10,10 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TerritoryType {
 
-    @JsonProperty("PlaceName")
-    private PlaceName placeName;
+  @JsonProperty("PlaceName")
+  private PlaceName placeName;
 
-    @JsonProperty("WeatherRate")
-    private int weatherRateId;
-
+  @JsonProperty("WeatherRate")
+  private int weatherRateId;
 }

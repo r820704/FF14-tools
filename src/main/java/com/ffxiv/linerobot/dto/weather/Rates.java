@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Rates {
 
-    private int weather;
+  private int weather;
 
-    private int rate;
+  private int rate;
 }

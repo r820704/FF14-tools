@@ -1,9 +1,8 @@
 package com.ffxiv.linerobot.entity.pk;
 
-import lombok.*;
-
-import javax.persistence.Column;
 import java.io.Serializable;
+import javax.persistence.Column;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -12,9 +11,9 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class BotConversationConfigPrimaryKey implements Serializable {
 
-    @Column(name = "topic")
-    private String topic;
+  @Column(name = "topic")
+  private String topic;
 
-    @Column(name = "conversation_id")
-    private String conversationId;
+  @Column(name = "conversation_id")
+  private String conversationId;
 }

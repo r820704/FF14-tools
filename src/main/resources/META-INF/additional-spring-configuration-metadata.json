@@ -1,12 +1,14 @@
-{"properties": [
-  {
-    "name": "webdriver.chrome.driver",
-    "type": "java.lang.String",
-    "description": "A description for 'webdriver.chrome.driver'"
-  },
-  {
-    "name": "lineuser.myid",
-    "type": "java.lang.String",
-    "description": "此ID對應我在Line平台的帳號"
-  }
-]}
+{
+  "properties": [
+    {
+      "name": "webdriver.chrome.driver",
+      "type": "java.lang.String",
+      "description": "A description for 'webdriver.chrome.driver'"
+    },
+    {
+      "name": "lineuser.myid",
+      "type": "java.lang.String",
+      "description": "此ID對應我在Line平台的帳號"
+    }
+  ]
+}

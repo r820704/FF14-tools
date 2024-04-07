@@ -7,13 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class FFXIVApplication {
-	private static final Logger log = LogManager.getLogger(FFXIVApplication.class);
+  private static final Logger log = LogManager.getLogger(FFXIVApplication.class);
 
-	public static void main(String[] args) {
-		log.info("FF14工具 開始執行！");
-		SpringApplication.run(FFXIVApplication.class, args);
-	}
-
-
-
+  public static void main(String[] args) {
+    log.info("FF14工具 開始執行！");
+    SpringApplication.run(FFXIVApplication.class, args);
+  }
 }
