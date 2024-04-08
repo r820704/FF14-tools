@@ -91,7 +91,7 @@ public class LineRobotService {
     // 創建 sender 物件並加入所需的屬性
     JSONObject sender = new JSONObject();
     sender.put("name", "塔塔露");
-    sender.put("iconUrl", "https://imgur.com/a/rJ6PJHD");
+    sender.put("iconUrl", "https://i.imgur.com/3D1i1Ju.png");
 
     // 將 sender 物件加入到 message 物件中
     message.put("sender", sender);
