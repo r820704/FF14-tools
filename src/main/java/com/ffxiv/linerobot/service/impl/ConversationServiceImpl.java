@@ -10,6 +10,7 @@ import com.ffxiv.linerobot.util.FFXIVTimeUtil;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ConversationServiceImpl implements ConversationService {
 
+  private static final DateTimeFormatter HH_MM_SS = DateTimeFormatter.ofPattern("HH:mm:ss");
   @Resource private RedisTemplate<String, Object> redisTemplate;
   @Autowired private WeatherService weatherService;
   @Autowired private BotConversationConfigRepository botConversationConfigRepository;
@@ -39,66 +41,75 @@ public class ConversationServiceImpl implements ConversationService {
     // todo 在無符合選項時會直接拋NoSuchElement Exception，沒符合時應保持當前進度
     log.info("userInputParam:" + userInputParam);
 
-    if (!isConversationSessionExists(userId)) {
-      nextLevelConversation = getConversationByParentId("");
-      String successConversationTitle = getSuccessConversationTitle(lineUserProfile);
-      setConversationSession(userId, "", "");
-      log.info("設定完conversationSession");
-      reply =
-          composeWeatherConversationReplyOptions(successConversationTitle, nextLevelConversation);
-    } else {
-      Map<String, String> conversationSession = getConversationSession(userId);
-      String topic = conversationSession.get("topic");
-      String parentId = conversationSession.get("parent_id");
-      // 輸入x則回到第一層選單
-      if (StringUtils.equals(StringUtils.lowerCase(userInputParam), "x")) {
-        removeConversationSession(userId);
-        getReply(lineUserProfile, receiveText);
-      }
-      validateUserInputAgainstConfig(topic, parentId, userInputParam);
-      switch (topic) {
-        case "weather":
-          nextLevelConversation = getNextLevelConversation(topic, userInputParam);
-          if (nextLevelConversation.isEmpty()) {
-            // @weatherParameter 為 bot_conversation_config.conversation_id
-            // 沒有下一階對話時代表要回的不是對話選項而是處理的結果
-            // todo 回覆結果的地球時間要格式化，只秀時分秒就好
-            // todo 結束對話時應將session結束，並在對話內容內提示?
-            List<WeatherConversationResult> weatherConversationResult =
-                weatherService.getWeatherProbability(userInputParam);
+    try {
+      if (!isConversationSessionExists(userId)) {
 
-            reply = composeWeatherConversationReplyResult(weatherConversationResult);
-            removeConversationSession(userId);
+        nextLevelConversation = getConversationByParentId("");
+        String successConversationTitle = getSuccessConversationTitle(lineUserProfile);
+        setConversationSession(userId, "", "");
+        log.info("設定完conversationSession");
+        reply =
+            composeWeatherConversationReplyOptions(successConversationTitle, nextLevelConversation);
+      } else {
+        Map<String, String> conversationSession = getConversationSession(userId);
+        String topic = conversationSession.get("topic");
+        String parentId = conversationSession.get("parent_id");
+        // 輸入x則回到第一層選單
+        if (StringUtils.equals(StringUtils.lowerCase(userInputParam), "x")) {
+          removeConversationSession(userId);
+          getReply(lineUserProfile, receiveText);
+        }
+        validateUserInputAgainstConfig(topic, parentId, userInputParam);
+        switch (topic) {
+          case "weather":
+            nextLevelConversation = getNextLevelConversation(topic, userInputParam);
+            if (nextLevelConversation.isEmpty()) {
+              // @weatherParameter 為 bot_conversation_config.conversation_id
+              // 沒有下一階對話時代表要回的不是對話選項而是處理的結果
+              // todo 回覆結果的地球時間要格式化，只秀時分秒就好
+              // todo 結束對話時應將session結束，並在對話內容內提示?
+              List<WeatherConversationResult> weatherConversationResult =
+                  weatherService.getWeatherProbability(userInputParam);
 
-            break;
-          } else {
+              reply = composeWeatherConversationReplyResult(weatherConversationResult);
+              removeConversationSession(userId);
+
+              break;
+            } else {
+              String successConversationTitle = getSuccessConversationTitle(lineUserProfile);
+              reply =
+                  composeWeatherConversationReplyOptions(
+                      successConversationTitle, nextLevelConversation);
+              setConversationSession(userId, "weather", userInputParam);
+              break;
+            }
+            //                case "time":
+          default:
+            // 看完index後，user發送的訊息會在這邊，此時session中的topic因為還沒進入任一個主題，所以是""
             String successConversationTitle = getSuccessConversationTitle(lineUserProfile);
-            reply =
-                composeWeatherConversationReplyOptions(
-                    successConversationTitle, nextLevelConversation);
-            setConversationSession(userId, "weather", userInputParam);
+            if (userInputParam.equals("a1")) {
+              nextLevelConversation = getNextLevelConversation("weather", userInputParam);
+              reply =
+                  composeWeatherConversationReplyOptions(
+                      successConversationTitle, nextLevelConversation);
+              setConversationSession(userId, "weather", userInputParam);
+            } else if (userInputParam.equals("a2")) {
+              // 因為沒有下一層選項所以回覆且刪除session
+              reply =
+                  FFXIVTimeUtil.convertEarthTimeToEorzeanTime(Instant.now().getEpochSecond())
+                      .toString();
+              removeConversationSession(userId);
+            }
             break;
-          }
-          //                case "time":
-        default:
-          // 看完index後，user發送的訊息會在這邊，此時session中的topic因為還沒進入任一個主題，所以是""
-          String successConversationTitle = getSuccessConversationTitle(lineUserProfile);
-          if (userInputParam.equals("a1")) {
-            nextLevelConversation = getNextLevelConversation("weather", userInputParam);
-            reply =
-                composeWeatherConversationReplyOptions(
-                    successConversationTitle, nextLevelConversation);
-            setConversationSession(userId, "weather", userInputParam);
-          } else if (userInputParam.equals("a2")) {
-            // 因為沒有下一層選項所以刪除session
-            reply =
-                FFXIVTimeUtil.convertEarthTimeToEorzeanTime(Instant.now().getEpochSecond())
-                    .toString();
-            removeConversationSession(userId);
-          }
-          break;
+        }
       }
+    } catch (Exception e) {
+      reply = "很抱歉，我不知道你說的是甚麼，請再次選擇，或按X回到上一層\n";
     }
+    if (!isConversationSessionExists(userId)) {
+      reply = reply + "\n此次對話已結束，如還有任何需要，請重新呼叫塔塔露~";
+    }
+
     return reply;
   }
 
@@ -128,7 +139,7 @@ public class ConversationServiceImpl implements ConversationService {
     weatherConversationResult.forEach(
         result -> {
           sb.append("區域:" + result.getPlaceName() + "\n");
-          sb.append("地球時間,艾歐澤亞時間,天氣");
+          sb.append("地球時間,艾歐澤亞時間,天氣\n");
           result
               .getDetails()
               .forEach(
@@ -137,7 +148,12 @@ public class ConversationServiceImpl implements ConversationService {
                     LocalTime eorzeanTime = detail.getEorzeanTime();
                     String weatherName = detail.getWeatherName();
 
-                    sb.append(earthTime + "," + eorzeanTime + "," + weatherName);
+                    sb.append(earthTime.format(HH_MM_SS))
+                        .append(",")
+                        .append("ET:")
+                        .append(eorzeanTime)
+                        .append(",")
+                        .append(weatherName);
                     sb.append("\n");
                   });
         });
