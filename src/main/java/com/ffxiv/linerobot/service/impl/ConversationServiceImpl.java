@@ -38,8 +38,11 @@ public class ConversationServiceImpl implements ConversationService {
     String reply = "";
     List<BotConversationConfig> nextLevelConversation = null;
     String userInputParam = receiveText;
-    // todo 在無符合選項時會直接拋NoSuchElement Exception，沒符合時應保持當前進度
     log.info("userInputParam:" + userInputParam);
+    if (StringUtils.equals(userInputParam, "0")) {
+      removeConversationSession(userId);
+      return "此次對話已結束，如還有任何需要，請重新呼叫塔塔露~";
+    }
 
     try {
       if (!isConversationSessionExists(userId)) {
@@ -180,7 +183,7 @@ public class ConversationServiceImpl implements ConversationService {
   private String composeWeatherConversationReplyOptions(
       String conversationTitle, List<BotConversationConfig> list) {
     if (list.isEmpty()) {
-      return "很抱歉，我不知道你說的是甚麼，請再次選擇，或按X回到上一層\n";
+      return "很抱歉，我不知道你說的是甚麼，請再次選擇，或輸入0結束對話\n";
     } else {
 
       list.sort(
