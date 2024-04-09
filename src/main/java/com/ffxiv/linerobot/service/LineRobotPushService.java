@@ -2,6 +2,8 @@ package com.ffxiv.linerobot.service;
 
 import com.ffxiv.crawler.service.CrawlerService;
 import java.io.IOException;
+
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -15,8 +17,10 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
+@Slf4j
 public class LineRobotPushService {
   private OkHttpClient client = new OkHttpClient();
 
@@ -70,7 +74,7 @@ public class LineRobotPushService {
 
               @Override
               public void onResponse(Call call, Response response) throws IOException {
-                System.out.println(response.body());
+                  log.info(response.body().string());
               }
 
               @Override
@@ -99,7 +103,7 @@ public class LineRobotPushService {
 
               @Override
               public void onResponse(Call call, Response response) throws IOException {
-                System.out.println(response.body().string());
+                log.info(response.body().string());
               }
 
               @Override

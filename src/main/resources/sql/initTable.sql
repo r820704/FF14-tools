@@ -4,6 +4,8 @@ INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail)
 VALUES ('weather', '', 'a1', '艾歐澤亞天氣');
 INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail)
 VALUES ('time', '', 'a2', '艾歐澤亞時間');
+INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail)
+VALUES ('house', '', 'a3', '艾歐澤亞房屋');
 
 -- use src/main/resources/ffxiv/weather/maintain_list to produce conversation option
 -- nimbletext: INSERT INTO bot_conversation_config(topic, parent_id, conversation_id, detail) VALUES('weather', 'a1', 'b$rowNumOne', '$0');

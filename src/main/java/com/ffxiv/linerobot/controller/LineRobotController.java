@@ -10,6 +10,8 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/robot")
 @RestController
+@Slf4j
 public class LineRobotController {
 
   @Value("${line.user.secret}")
@@ -47,7 +50,7 @@ public class LineRobotController {
       @RequestHeader("X-Line-Signature") String X_Line_Signature, @RequestBody String requestBody)
       throws IOException, InterruptedException, JSONException {
     if (checkFromLine(requestBody, X_Line_Signature)) {
-      System.out.println("驗證通過");
+      log.info("驗證通過");
       JSONObject object = new JSONObject(requestBody);
       for (int i = 0; i < object.getJSONArray("events").length(); i++) {
         if (object.getJSONArray("events").getJSONObject(i).getString("type").equals("message")) {
@@ -56,7 +59,7 @@ public class LineRobotController {
       }
       return new ResponseEntity<String>("OK", HttpStatus.OK);
     }
-    System.out.println("驗證不通過");
+    log.info("驗證不通過");
     return new ResponseEntity<String>("Not line platform", HttpStatus.BAD_GATEWAY);
   }
 

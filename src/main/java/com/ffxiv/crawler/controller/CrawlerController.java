@@ -13,7 +13,7 @@ public class CrawlerController {
   @Autowired public CrawlerService crawlerService;
 
   @GetMapping("/getcrawlerresult")
-  public String getcrawlerresult() throws InterruptedException {
+  public String getcrawlerresult() {
 
     return crawlerService.getHouseList();
   }

@@ -71,9 +71,6 @@ public class LineRobotService {
       log.info("準備呼叫conversationService");
       String reply = conversationService.getReply(lineUserProfile, receiveText);
       text(event.getString("replyToken"), reply);
-    } else if (receiveText.startsWith("!房屋")) {
-      houseList = crawlerService.getHouseList();
-      text(event.getString("replyToken"), houseList.substring(0, 100));
     } else if (receiveText.startsWith("!機器人")) {
       text(
           event.getString("replyToken"),

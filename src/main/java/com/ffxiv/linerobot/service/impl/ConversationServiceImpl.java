@@ -1,5 +1,6 @@
 package com.ffxiv.linerobot.service.impl;
 
+import com.ffxiv.crawler.service.CrawlerService;
 import com.ffxiv.linerobot.dto.weather.WeatherConversationResult;
 import com.ffxiv.linerobot.entity.BotConversationConfig;
 import com.ffxiv.linerobot.entity.LineUserProfile;
@@ -31,6 +32,7 @@ public class ConversationServiceImpl implements ConversationService {
   @Resource private RedisTemplate<String, Object> redisTemplate;
   @Autowired private WeatherService weatherService;
   @Autowired private BotConversationConfigRepository botConversationConfigRepository;
+  @Autowired private CrawlerService crawlerService;
 
   @Override
   public String getReply(LineUserProfile lineUserProfile, String receiveText) {
@@ -102,11 +104,18 @@ public class ConversationServiceImpl implements ConversationService {
                   FFXIVTimeUtil.convertEarthTimeToEorzeanTime(Instant.now().getEpochSecond())
                       .toString();
               removeConversationSession(userId);
+            } else if (userInputParam.equals("a3")) {
+              // 因為沒有下一層選項所以回覆且刪除session
+              // fixme line回覆有字數限制，先只回部分字來代表功能正常
+              String houseList = crawlerService.getHouseList();
+              reply = houseList.length() > 100 ? houseList.substring(0, 100) : houseList;
+              removeConversationSession(userId);
             }
             break;
         }
       }
     } catch (Exception e) {
+      log.error(e.getMessage());
       reply = "很抱歉，我不知道你說的是甚麼，請再次選擇，或按X回到上一層\n";
     }
     if (!isConversationSessionExists(userId)) {
