@@ -3,10 +3,13 @@ package com.ffxiv.crawler.service;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
+
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotInteractableException;
@@ -16,7 +19,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -58,16 +63,27 @@ public class CrawlerService {
       // fixme sometimes not work
       try {
         WebElement Boxelement = driver.findElement(By.className("info-box"));
+        log.info("取得info-box元素");
         WebElement selectElement = Boxelement.findElement(By.cssSelector("select"));
+        log.info("取得select元素");
         Select selector = new Select(selectElement);
         selector.selectByValue("1178");
+        log.info("取得1178元素");
 
         WebElement submitButton = driver.findElement(By.className("is-primary"));
+        log.info("取得is-primary元素");
+
+//        // 使用 WebDriverWait 來等待提交按鈕變為可點選狀態
+//        WebDriverWait wait = new  WebDriverWait(driver, Duration.ofSeconds(10));
+//        wait.until(ExpectedConditions.elementToBeClickable(submitButton));
+
         submitButton.click();
       } catch (ElementNotInteractableException e) {
         log.info("已執行過查詢所以跳過初次選擇伺服器視窗動作");
       }
 
+      //implicitlyWait似乎會套用到全部selenium的操作
+      driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
       List<WebElement> saleItems = driver.findElements(By.className("sale-item"));
       log.info("==========開始列印============");
 
