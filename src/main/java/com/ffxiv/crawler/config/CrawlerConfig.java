@@ -21,7 +21,9 @@ public class CrawlerConfig {
   //	@Scope("prototype")
   public WebDriver driver(@Value("${webdriver.chrome.driver}") String WEBDRIVER_PATH)
       throws MalformedURLException {
-
+    // fixme 在初始化後，在查詢過一次(執行了driver.quit())，或是甚麼都不做過了大約五分鐘，session都會timeout關閉，導致下一次的查詢要使用舊Session時失敗
+    // fixme 應要每次使用時都重新初始化driver
+    // fixme (https://stackoverflow.com/questions/69253844/proper-driver-quit-to-enable-reopening-the-driver
     System.out.println("WEBDRIVER_PATH: " + WEBDRIVER_PATH);
     // 若瀏覽器安裝位置為預設則webDriver會自動搜尋path設定的位置，也可以使用System.setProperty 來指定路徑
     System.setProperty("webdriver.chrome.driver", WEBDRIVER_PATH);

@@ -3,7 +3,7 @@ services:
   my-spring-boot-app:
     build:
       context: .
-      dockerfile: Dockerfile_spring_boot
+      dockerfile: dockerfile_spring_boot
     ports:
       - "8090:8090"
     environment:
