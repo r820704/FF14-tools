@@ -29,8 +29,11 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class CrawlerService {
 
+  @Value("${ffxiv.house.url:}")
+  private String HOUSE_LISTING_URL;
   @Value("${webdriver.chrome.driver}")
   private String WEBDRIVER_PATH;
+
 
   public static void main(String[] args) throws IOException, InterruptedException {
 
@@ -54,8 +57,8 @@ public class CrawlerService {
       log.info("目前的URL :" + driver.getCurrentUrl());
 
       // 如果當前URL已經進入house查詢畫面，則不重複get，否則會無法成功獲取畫面上elements
-      if (!"https://house.ffxiv.cyou/#/".equals(driver.getCurrentUrl())) {
-        driver.get("https://house.ffxiv.cyou/#/");
+      if (!HOUSE_LISTING_URL.equals(driver.getCurrentUrl())) {
+        driver.get(HOUSE_LISTING_URL);
         // 取得pageTitle
         String title = driver.getTitle();
         log.info("取得的title:" + title);
