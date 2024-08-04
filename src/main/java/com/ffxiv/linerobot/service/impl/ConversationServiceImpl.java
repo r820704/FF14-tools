@@ -57,7 +57,7 @@ public class ConversationServiceImpl implements ConversationService {
         setConversationSession(userId, "", "");
         log.info("設定完conversationSession");
         reply =
-            composeWeatherConversationReplyOptions(successConversationTitle, nextLevelConversation);
+            composeWeatherConversationReplyOptions(successConversationTitle, nextLevelConversation, userId);
       } else {
         Map<String, String> conversationSession = getConversationSession(userId);
         String topic = conversationSession.get("topic");
@@ -87,7 +87,7 @@ public class ConversationServiceImpl implements ConversationService {
               String successConversationTitle = getSuccessConversationTitle(lineUserProfile);
               reply =
                   composeWeatherConversationReplyOptions(
-                      successConversationTitle, nextLevelConversation);
+                      successConversationTitle, nextLevelConversation, userId);
               setConversationSession(userId, "weather", userInputParam);
               break;
             }
@@ -99,7 +99,7 @@ public class ConversationServiceImpl implements ConversationService {
               nextLevelConversation = getNextLevelConversation("weather", userInputParam);
               reply =
                   composeWeatherConversationReplyOptions(
-                      successConversationTitle, nextLevelConversation);
+                      successConversationTitle, nextLevelConversation, userId);
               setConversationSession(userId, "weather", userInputParam);
             } else if (userInputParam.equals("a2")) {
               // 因為沒有下一層選項所以回覆且刪除session
@@ -222,9 +222,10 @@ public class ConversationServiceImpl implements ConversationService {
   }
 
   private String composeWeatherConversationReplyOptions(
-      String conversationTitle, List<BotConversationConfig> list) {
+      String conversationTitle, List<BotConversationConfig> list, String userId) {
     if (list.isEmpty()) {
-      return "很抱歉，我不知道你說的是甚麼，請再次選擇，或輸入0結束對話\n";
+      removeConversationSession(userId);
+      return "很抱歉，我不知道你說的是甚麼，請重新開始對話\n";
     } else {
 
       list.sort(
