@@ -137,7 +137,7 @@ public class ConversationServiceImpl implements ConversationService {
       }
     } catch (Exception e) {
       log.error(e.getMessage());
-      reply = "很抱歉，我不知道你說的是甚麼，請再次選擇，或按X回到上一層\n";
+      reply = "很抱歉，我不知道你說的是甚麼，請再次選擇\n";
     }
     if (!isConversationSessionExists(userId)) {
       reply = reply + "\n此次對話已結束，如還有任何需要，請重新呼叫塔塔露~";
