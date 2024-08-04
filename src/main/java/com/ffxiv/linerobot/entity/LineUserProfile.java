@@ -35,4 +35,7 @@ public class LineUserProfile {
 
   @Column(name = "status_message")
   private String statusMessage;
+
+  @Column(name = "ffxiv_id")
+  private String ffxivId;
 }

@@ -38,9 +38,9 @@ public class LineRobotController {
   @GetMapping("/test")
   public ResponseEntity test() {
 
-    lineUserRepository.saveAndFlush(
-        new LineUserProfile(String.valueOf(Math.random()), "test", "test", "test", "test", "test"));
-    redisTemplate.opsForValue().set(String.valueOf(Math.random()), "test");
+//    lineUserRepository.saveAndFlush(
+//        new LineUserProfile(String.valueOf(Math.random()), "test", "test", "test", "test", "test"));
+//    redisTemplate.opsForValue().set(String.valueOf(Math.random()), "test");
 
     return new ResponseEntity("Hello J A V A!!", HttpStatus.OK);
   }

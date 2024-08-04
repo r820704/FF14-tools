@@ -5,6 +5,7 @@ import com.ffxiv.linerobot.dto.weather.WeatherConversationResult;
 import com.ffxiv.linerobot.entity.BotConversationConfig;
 import com.ffxiv.linerobot.entity.LineUserProfile;
 import com.ffxiv.linerobot.repository.BotConversationConfigRepository;
+import com.ffxiv.linerobot.repository.LineUserProfileRepository;
 import com.ffxiv.linerobot.service.ConversationService;
 import com.ffxiv.linerobot.service.WeatherService;
 import com.ffxiv.linerobot.util.FFXIVTimeUtil;
@@ -33,6 +34,8 @@ public class ConversationServiceImpl implements ConversationService {
   @Autowired private WeatherService weatherService;
   @Autowired private BotConversationConfigRepository botConversationConfigRepository;
   @Autowired private CrawlerService crawlerService;
+    @Autowired
+    private LineUserProfileRepository lineUserProfileRepository;
 
   @Override
   public String getReply(LineUserProfile lineUserProfile, String receiveText) {
@@ -110,6 +113,23 @@ public class ConversationServiceImpl implements ConversationService {
               String houseList = crawlerService.getHouseList();
               reply = houseList.length() > 100 ? houseList.substring(0, 100) : houseList;
               removeConversationSession(userId);
+            } else if (userInputParam.equals("a4")) {
+
+              List<LineUserProfile> all = lineUserProfileRepository.findAll();
+              StringBuilder result = new StringBuilder();
+
+// 添加標題
+              result.append(String.format("%-20s %s%n", "Line暱稱", "遊戲ID"));
+              result.append("----------------------------------------\n");
+
+              for (LineUserProfile line : all) {
+                String formattedLine = String.format("%-20s %s%n",
+                        truncateOrPad(line.getDisplayName(), 20),
+                        line.getFfxivId() != null ? line.getFfxivId() : "");
+                result.append(formattedLine);
+              }
+
+              reply =  result.toString();
             }
             break;
         }
@@ -123,6 +143,17 @@ public class ConversationServiceImpl implements ConversationService {
     }
 
     return reply;
+  }
+
+  private static String truncateOrPad(String input, int width) {
+    if (input == null) {
+      input = "";
+    }
+    if (input.length() > width) {
+      return input.substring(0, width);
+    } else {
+      return String.format("%-" + width + "s", input);
+    }
   }
 
   private void removeConversationSession(String userId) {
