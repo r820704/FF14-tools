@@ -130,6 +130,7 @@ public class ConversationServiceImpl implements ConversationService {
               }
 
               reply =  result.toString();
+              removeConversationSession(userId);
             }
             break;
         }
