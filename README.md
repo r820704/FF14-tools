@@ -40,3 +40,7 @@ For ease of deployment, you can use Docker as described below:
 1. **Create a Docker Network**: This will be used to connect your containers.
 2. **Run MySQL and Redis Containers**: Launch these containers and ensure they are on the created network.
 3. **Run docker-compose.yml**: Launch Spring boot app and ensure they are on the created network. 
+
+# Final Fantasy XIV: Endwalker - A Momentous Chapter in the Warrior of Light's Journey
+
+![ffxiv_20220504_230300_070](https://github.com/user-attachments/assets/620b084e-5f04-42df-80da-73552f988bc0)
